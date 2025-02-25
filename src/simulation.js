@@ -16,7 +16,7 @@ const Simulation = () => {
     const dragControlsRef = useRef(null);
     const [currentItem, setCurrentItem] = useState(0);
     const [passedCurrentItem, setPassedCurrentItem] = useState(false);
-    const [timer, setTimer] = useState(30); // Timer set for 30 seconds
+    const [timer, setTimer] = useState(60); // Timer set for 60 seconds
     const [disableControls, setDisableControls] = useState(false);
     const [showLabConfirmation, setShowLabConfirmation] = useState(false); 
     const [labConfirmed, setLabConfirmed] = useState(false); // Track if user accepted
@@ -86,14 +86,14 @@ const Simulation = () => {
         },
         {
             ModelFile: '/models/foot.glb',
-            targetPosition: { x: -8.25, y: -0.63, z: 2.36 },
+            targetPosition: { x: -8.25, y: -0.63, z: 2.36 }, 
             targetRotation: { 
-                x: -Math.PI, 
-                y: Math.PI / 2, 
-                z: -Math.PI / 2,
+                x: -Math.PI, // -180
+                y: Math.PI / 2, // 90
+                z: -Math.PI / 2, // -90
             },
             threshold: 0.3,
-            scale: { x: 1, y: 1, z: 1 }, // Scale added here
+            scale: { x: 1, y: 1, z: 1 }, // Scale added here 
             instructionText: "Properly simulate the Lateral Ankle position"
         }
         
@@ -130,6 +130,12 @@ const Simulation = () => {
         }
     };
 
+    const handleRestartSimulation = () => {
+        setPassedCount(0); // Reset passed count
+        setShowResultModal(false); // Hide result modal
+        setShowIntro(true); // Show intro again
+    };
+
     const handleLabConfirmation = (confirmed) => {
         setShowLabConfirmation(false); // Hide the pop-up
         setDisableControls(!confirmed); // Enable controls if confirmed
@@ -146,7 +152,7 @@ const Simulation = () => {
     useEffect(() => {
         document.body.style.overflow = 'hidden'; // Prevent scroll when model is shown
         updateInstructionText(currentItem);
-        setTimer(30);
+        setTimer(40);
 
         if (showModel) {
             const scene = new THREE.Scene();
@@ -388,18 +394,41 @@ if (distance <= threshold && isRotationValid) {
     };
     
     const handleEndSimulation = () => {
-        // Calculate the final score
+        // Calculate the final score as a whole number (raw correct answers)
         const totalItems = simulationSettings.length;
-        const score = ((passedCount / totalItems) * 100).toFixed(2);
-        
+        const rawScore = passedCount; // Use raw count instead of percentage
+    
         // Show the result modal
         setShowResultModal(true);
-        setFinalScore({ correct: passedCount, total: totalItems, percentage: score });
-
+        setFinalScore({ correct: rawScore, total: totalItems });
+    
         // Keep the last model visible while showing the result modal
         setShowModel(true);  // Ensure model stays visible
         setShowIntro(false); // Prevent redirection immediately
-};
+    
+        // ✅ Google Forms Submission (Replace with your actual form details)
+        const googleFormURL = "https://docs.google.com/forms/d/e/1FAIpQLSevZ7KVQ9la2o-VlwSH9cuQKw9JE5eiAuwvqq8TLCW2KHbBtg/formResponse";
+        const scoreEntryID = "entry.332590206";  // Replace with your actual Google Forms entry ID
+    
+        // Construct the form data
+        const formData = new FormData();
+        formData.append(scoreEntryID, rawScore); // Send raw score instead of percentage
+    
+        // ✅ Send the data to Google Forms (asynchronously)
+        fetch(googleFormURL, {
+            method: "POST",
+            mode: "no-cors", // No CORS mode to bypass cross-origin restrictions
+            body: formData
+        })
+        .then(() => {
+            console.log("Score submitted to Google Forms successfully.");
+        })
+        .catch((error) => {
+            console.error("Error submitting score to Google Forms:", error);
+        });
+    };
+    
+    
 
     const handleExitSimulation = () => {
         const confirmation = window.confirm('Are you sure you want to exit? All progress will be lost.');
@@ -412,7 +441,9 @@ if (distance <= threshold && isRotationValid) {
             setFeedbackMessage('');
             setFeedbackColor('red');
             setPassedCurrentItem(false);
-            
+    
+            setPassedCount(0); // Reset the score
+            setFinalScore({ correct: 0, total: 0 }); // Reset displayed score
     
             if (Model) {
                 Model.traverse((child) => {
@@ -461,17 +492,21 @@ if (distance <= threshold && isRotationValid) {
                 textAlign: 'center',
                 animation: 'fadeIn 0.3s ease-in-out',
             }}
-        >
+                    >
             <h2 style={{ color: '#333', marginBottom: '15px' }}>Simulation Complete!</h2>
             <p style={{ color: '#555', fontSize: '16px', lineHeight: '1.5' }}>
-                Thank you for completing the simulation! 🎉   Here are your results:
+                Thank you for completing the simulation! 🎉 Here are your results:
             </p>
 
             <p style={{ fontSize: '18px', fontWeight: 'bold', margin: '15px 0' }}>
                 Correct: {finalScore?.correct}/{finalScore?.total}
             </p>
             <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#28a745' }}>
-                Final Score: {finalScore?.percentage}%
+                Final Score: {finalScore?.correct} points
+            </p>
+
+            <p style={{ color: '#28a745', fontSize: '16px', marginTop: '15px', fontWeight: 'bold' }}>
+    ✅ Your score has been recorded successfully!
             </p>
 
             {/* Buttons */}
@@ -541,7 +576,7 @@ if (distance <= threshold && isRotationValid) {
                 </h2>
                 <p style={{ color: '#555', fontSize: '16px', lineHeight: '1.5' }}>
                     You need to complete 5 lab activities: <b>PA Hand, Lateral Wrist, AP Elbow, AP Foot, 
-                    and Lateral Ankle.</b> You will have <b><u>30 seconds</u></b> to complete each activity. 
+                    and Lateral Ankle.</b> You will have <b><u>60 seconds</u></b> to complete each activity. 
                     Ensure correct positioning for each model. Are you ready to begin?
                 </p>
     

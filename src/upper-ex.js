@@ -23,11 +23,11 @@ const Upper = () => {
 
         <section className="procedure-section">
           <div className="section">
-            <img src="hand.png" alt="Wrist" className="procedure-image" />
+            <img src="wrist.png" alt="Wrist" className="procedure-image" />
             <div className="section-title">Wrist</div>
           </div>
           <ul className="procedure-list">
-            <li><Link to="/wrist">Lateral</Link></li> {/* Linking to Wrist page */}
+            <li><Link to="/wrist">LATERAL</Link></li> {/* Linking to Wrist page */}
           </ul>
         </section>
 
@@ -35,7 +35,7 @@ const Upper = () => {
 
         <section className="procedure-section">
           <div className="section">
-            <img src="hand.png" alt="Elbow" className="procedure-image" />
+            <img src="elbow.png" alt="Elbow" className="procedure-image" />
             <div className="section-title">Elbow</div>
           </div>
           <ul className="procedure-list">

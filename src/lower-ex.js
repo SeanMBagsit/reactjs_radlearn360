@@ -15,7 +15,7 @@ const Lower = () => {
 
         <section className="procedure-section">
           <div className="section">
-            <img src="hand.png" alt="Foot" className="procedure-image" />
+            <img src="foot.png" alt="Foot" className="procedure-image" />
             <div className="section-title">Foot</div>
           </div>
           <ul className="procedure-list">
@@ -29,12 +29,12 @@ const Lower = () => {
 
         <section className="procedure-section">
           <div className="section">
-            <img src="hand.png" alt="Ankle" className="procedure-image" />
+            <img src="ankle.png" alt="Ankle" className="procedure-image" />
             <div className="section-title">Ankle</div>
           </div>
           <ul className="procedure-list">
             <li>
-              <NavLink to="/ankle" className="link">Lateral</NavLink> {/* Use NavLink for routing */}
+              <NavLink to="/ankle" className="link">LATERAL</NavLink> {/* Use NavLink for routing */}
             </li>
           </ul>
         </section>
