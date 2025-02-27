@@ -9,7 +9,7 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.0.2",
     "react-scripts": "^5.0.1",
-    "three": "^0.169.0"
+    "three": "^0.171.0"
   },
   "scripts": {
     "start": "react-scripts start",
