@@ -1,0 +1,336 @@
+/* General styles */
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Intro screen */
+  .intro-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: clamp(20px, 5vw, 30px);
+  }
+  
+  .start-button {
+    background-color: blue;
+    color: white;
+    padding: clamp(10px, 3vw, 15px) clamp(15px, 5vw, 30px);
+    border: none;
+    border-radius: 5px;
+    font-size: clamp(16px, 4vw, 24px);
+    cursor: pointer;
+  }
+  
+  /* Model viewer */
+  .model-viewer-container {
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  }
+  
+  .model-viewer {
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Buttons */
+  .exit-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: clamp(20px, 5vw, 30px);
+    cursor: pointer;
+    z-index: 20;
+    padding: 5px;
+  }
+  
+  .verify-button {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: clamp(8px, 2vw, 10px);
+    cursor: pointer;
+    font-size: clamp(14px, 3vw, 18px);
+    z-index: 20;
+  }
+  
+  .next-button {
+    position: absolute;
+    bottom: clamp(70px, 15vh, 100px);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: green;
+    color: white;
+    padding: clamp(10px, 3vw, 20px) clamp(15px, 4vw, 30px);
+    border: none;
+    border-radius: 9px;
+    font-size: clamp(18px, 4vw, 30px);
+    cursor: pointer;
+    z-index: 20;
+    width: clamp(100px, 40vw, 200px);
+    text-align: center;
+  }
+  
+  .button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* Progress tracker */
+  .progress-container {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 15;
+  }
+  
+  .progress-bar {
+    height: 10px;
+    background-color: green;
+    border-radius: 5px;
+  }
+  
+  .progress-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: clamp(12px, 3vw, 16px);
+    top: 15px;
+  }
+  
+  /* Feedback messages */
+  .feedback-message {
+    position: absolute;
+    bottom: 60px;
+    width: 90%;
+    left: 5%;
+    text-align: center;
+    font-size: clamp(16px, 4vw, 24px);
+    font-weight: bold;
+    z-index: 15;
+  }
+  
+  /* Position and rotation info */
+  .model-info {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    color: white;
+    font-size: clamp(10px, 3vw, 18px);
+    z-index: 15;
+    max-width: 50%;
+  }
+  
+  .rotation-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+    color: white;
+    font-size: clamp(10px, 3vw, 18px);
+    z-index: 15;
+    width: clamp(120px, 40vw, 200px);
+  }
+  
+  .rotation-control {
+    margin-bottom: 10px;
+  }
+  
+  .rotation-slider {
+    width: 100%;
+  }
+  
+  /* Timer */
+  .timer {
+    position: absolute;
+    top: 20px;
+    right: 50px;
+    text-align: right;
+    color: white;
+    font-size: clamp(12px, 3vw, 18px);
+    z-index: 15;
+  }
+  
+  /* Modals */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .modal {
+    background-color: #f8f9fa;
+    padding: clamp(15px, 5vw, 30px);
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    width: clamp(280px, 90vw, 400px);
+    max-height: 80vh;
+    overflow-y: auto;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+    margin: 15px;
+  }
+  
+  .modal h2 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: clamp(18px, 4vw, 24px);
+  }
+  
+  .modal p {
+    color: #555;
+    font-size: clamp(14px, 3vw, 16px);
+    line-height: 1.5;
+  }
+  
+  .modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .modal-button {
+    padding: clamp(8px, 3vw, 12px) clamp(16px, 5vw, 24px);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: clamp(14px, 3vw, 16px);
+    font-weight: bold;
+    transition: background 0.3s;
+    flex: 1;
+    min-width: 100px;
+    max-width: 150px;
+  }
+  
+  .ok-button {
+    background-color: #007bff;
+  }
+  
+  .ok-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .confirm-button {
+    background-color: #28a745;
+    margin-right: 10px;
+  }
+  
+  .confirm-button:hover {
+    background-color: #218838;
+  }
+  
+  .cancel-button {
+    background-color: #dc3545;
+  }
+  
+  .cancel-button:hover {
+    background-color: #c82333;
+  }
+  
+  /* Results modal */
+  .score-text {
+    font-size: clamp(16px, 3.5vw, 18px);
+    font-weight: bold;
+    margin: 15px 0;
+  }
+  
+  .final-score {
+    font-size: clamp(18px, 4vw, 20px);
+    font-weight: bold;
+    color: #28a745;
+  }
+  
+  .success-message {
+    color: #28a745;
+    font-size: clamp(14px, 3vw, 16px);
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  
+  /* For small mobile devices */
+  @media (max-width: 576px) {
+    .verify-button, .timer {
+      font-size: 12px;
+    }
+    
+    .model-info, .rotation-controls {
+      font-size: 10px;
+    }
+    
+    .timer {
+      top: 10px;
+      right: 40px;
+    }
+    
+    .exit-button {
+      top: 5px;
+      right: 5px;
+    }
+    
+    .rotation-controls {
+      bottom: 60px;
+      width: 120px;
+    }
+    
+    .rotation-control {
+      margin-bottom: 5px;
+    }
+  }
+  
+  /* Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Touch-friendly controls for mobile */
+  @media (pointer: coarse) {
+    .rotation-slider {
+      height: 30px;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 25px;
+      background: white;
+      border-radius: 50%;
+    }
+  }

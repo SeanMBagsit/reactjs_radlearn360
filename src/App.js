@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, NavLink, useLocation } from "react-router-dom";
 import "./App.css";
 import Study from "./study";
@@ -14,6 +14,7 @@ import Homepage from "./homepage";
 
 const App = () => {
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
   
   // Check if current path is study-related
   const isStudyRoute = () => {
@@ -21,31 +22,62 @@ const App = () => {
     return studyPaths.some(path => location.pathname === path);
   };
 
-// 🔥 Fix: Restore scrolling when switching pages
-useEffect(() => {
-  if (location.pathname === "/") {
-    document.body.style.overflow = "auto"; // Always enable scrolling on homepage
-  } else if (location.pathname === "/simulation") {
-    document.body.style.overflow = "hidden"; // Hide scrolling in simulation
-  }
-}, [location.pathname]);
+  // Toggle menu function
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  // Close menu when a link is clicked
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
+  // 🔥 Fix: Restore scrolling when switching pages
+  useEffect(() => {
+    if (location.pathname === "/") {
+      document.body.style.overflow = "auto"; // Always enable scrolling on homepage
+    } else if (location.pathname === "/simulation") {
+      document.body.style.overflow = "hidden"; // Hide scrolling in simulation
+    }
+  }, [location.pathname]);
 
   return (
     <div>
       {/* Navigation Bar */}
       <header className="navbar">
         <div className="logo">RadLearn360</div>
-        <nav className="nav-links">
-          <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>
+        
+        {/* Hamburger Menu Button */}
+        <div 
+          className={`hamburger ${menuOpen ? 'open' : ''}`} 
+          onClick={toggleMenu}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        
+        {/* Navigation Links */}
+        <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
+          <NavLink 
+            to="/" 
+            className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMenu}
+          >
             Home
           </NavLink>
           <NavLink 
             to="/study" 
             className={isStudyRoute() ? "active" : ""}
+            onClick={closeMenu}
           >
             Study
           </NavLink>
-          <NavLink to="/simulation" className={({ isActive }) => (isActive ? "active" : "")}>
+          <NavLink 
+            to="/simulation" 
+            className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMenu}
+          >
             Simulation
           </NavLink>
         </nav>
@@ -65,7 +97,6 @@ useEffect(() => {
         <Route path="/simulation" element={<Simulation />} />
       </Routes>
     </div>
-    
   );
 };
 

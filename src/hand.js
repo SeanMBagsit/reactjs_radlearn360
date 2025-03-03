@@ -7,12 +7,33 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 const Hand = () => {
     const [showModel, setShowModel] = useState(false);
     const modelViewerRef = useRef(null);
+    const rendererRef = useRef(null);
+    const sceneRef = useRef(null);
+    const cameraRef = useRef(null);
+    const controlsRef = useRef(null);
+
+    // Handle window resize
+    const handleResize = () => {
+        if (showModel && cameraRef.current && rendererRef.current) {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            cameraRef.current.aspect = width / height;
+            cameraRef.current.updateProjectionMatrix();
+            
+            rendererRef.current.setSize(width, height);
+        }
+    };
 
     useEffect(() => {
-        document.body.style.overflow = 'hidden'; // Prevent scroll when model is shown
-        
         if (showModel) {
+            document.body.style.overflow = 'hidden'; // Prevent scroll when model is shown
+            
+            // Initialize scene
             const scene = new THREE.Scene();
+            sceneRef.current = scene;
+            
+            // Initialize camera
             const camera = new THREE.PerspectiveCamera(
                 30,
                 window.innerWidth / window.innerHeight,
@@ -20,13 +41,21 @@ const Hand = () => {
                 1000
             );
             camera.position.set(0, 30, -12);
+            cameraRef.current = camera;
 
+            // Initialize renderer
             const renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            modelViewerRef.current.appendChild(renderer.domElement);
+            rendererRef.current = renderer;
+            
+            if (modelViewerRef.current) {
+                modelViewerRef.current.innerHTML = '';
+                modelViewerRef.current.appendChild(renderer.domElement);
+            }
 
+            // Add lights
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambientLight);
 
@@ -84,17 +113,35 @@ const Hand = () => {
             controls.dampingFactor = 0.25;
             controls.screenSpacePanning = false;
             controls.maxPolarAngle = Math.PI / 2;
+            controlsRef.current = controls;
+
+            // Add event listener for window resize
+            window.addEventListener('resize', handleResize);
 
             const animate = () => {
+                if (!showModel) return;
+                
                 requestAnimationFrame(animate);
-                controls.update();
-                renderer.render(scene, camera);
+                if (controlsRef.current) controlsRef.current.update();
+                if (rendererRef.current && sceneRef.current && cameraRef.current) {
+                    rendererRef.current.render(sceneRef.current, cameraRef.current);
+                }
             };
             animate();
 
+            // Cleanup function
             return () => {
-                renderer.dispose();
-                controls.dispose();
+                window.removeEventListener('resize', handleResize);
+                document.body.style.overflow = 'auto'; // Restore scroll
+                
+                if (rendererRef.current) rendererRef.current.dispose();
+                if (controlsRef.current) controlsRef.current.dispose();
+                
+                // Clear references
+                rendererRef.current = null;
+                sceneRef.current = null;
+                cameraRef.current = null;
+                controlsRef.current = null;
             };
         }
     }, [showModel]);
@@ -109,77 +156,59 @@ const Hand = () => {
 
     return (
         <div>
-        <main className="contentmodels">
-        <div className="procedure-container">
-        <div className="image-section">
-            <div className="black-box" onClick={handleClick}>
-                <img src="/pics/hand.png" alt="Hand Image" className="black-box-image" />
-                <p>Click to View 3D Model</p>
-            </div>
-        </div>
-                <div className="text-section">
-                    <h2>Clinical Details:</h2>
-                    <div className="scrollable-box">
-                        <h3>Clinical Indications:</h3>
-                        <ul className="highlighted-list">
-                            <li>Fractures, dislocations, or foreign bodies of the phalanges, metacarpals, and all joints of the hand.</li>
-                            <li>Pathologic processes such as osteoporosis and osteoarthritis.</li>
-                        </ul>
-                        <h3>Technical Factors:</h3>
-                        <ul className="technical-details">
-                            <li><strong>Minimum SID:</strong> 40 inches (100 cm).</li>
-                            <li><strong>IR size:</strong> 10 x 12 inches (24 x 30 cm), portrait; collimate to area of interest.</li>
-                            <li><strong>kVp range:</strong> 55 to 65.</li>
-                            <li><strong>Shielding:</strong> Shield radiosensitive tissues outside the region of interest.</li>
-                        </ul>
-                        <h3>Shielding:</h3>
-                        <p>Shield radiosensitive tissues outside region of interest.</p>
-                        <h3>Patient Position:</h3>
-                        <p>Seat patient at the end of the table with hand and forearm extended.</p>
-                        <h3>Part Position:</h3>
-                        <ul>
-                            <li>Pronate hand with palmar surface in contact with IR; spread fingers slightly.</li>
-                            <li>Align the long axis of hand and forearm with the long axis of IR.</li>
-                            <li>Center hand and wrist to IR.</li>
-                        </ul>
-                        <h3>CR:</h3>
-                        <p>CR perpendicular to IR, directed to third MCP joint.</p>
-                        <h3>Recommended Collimation:</h3>
-                        <p>Collimate on four sides to the outer margins of hand and wrist.</p>
-                        <h3>Note:</h3>
-                        <p>If examinations of both hands or wrists are requested, the body parts should be positioned and exposed separately for correct CR placement.</p>
+            <main className="contentmodels">
+                <div className="procedure-container">
+                    <div className="image-section">
+                        <div className="black-box" onClick={handleClick}>
+                            <img src="/pics/hand.png" alt="Hand Image" className="black-box-image" />
+                            <p>Click to View 3D Model</p>
+                        </div>
+                    </div>
+                    <div className="text-section">
+                        <h2>Clinical Details:</h2>
+                        <div className="scrollable-box">
+                            <h3>Clinical Indications:</h3>
+                            <ul className="highlighted-list">
+                                <li>Fractures, dislocations, or foreign bodies of the phalanges, metacarpals, and all joints of the hand.</li>
+                                <li>Pathologic processes such as osteoporosis and osteoarthritis.</li>
+                            </ul>
+                            <h3>Technical Factors:</h3>
+                            <ul className="technical-details">
+                                <li><strong>Minimum SID:</strong> 40 inches (100 cm).</li>
+                                <li><strong>IR size:</strong> 10 x 12 inches (24 x 30 cm), portrait; collimate to area of interest.</li>
+                                <li><strong>kVp range:</strong> 55 to 65.</li>
+                                <li><strong>Shielding:</strong> Shield radiosensitive tissues outside the region of interest.</li>
+                            </ul>
+                            <h3>Shielding:</h3>
+                            <p>Shield radiosensitive tissues outside region of interest.</p>
+                            <h3>Patient Position:</h3>
+                            <p>Seat patient at the end of the table with hand and forearm extended.</p>
+                            <h3>Part Position:</h3>
+                            <ul>
+                                <li>Pronate hand with palmar surface in contact with IR; spread fingers slightly.</li>
+                                <li>Align the long axis of hand and forearm with the long axis of IR.</li>
+                                <li>Center hand and wrist to IR.</li>
+                            </ul>
+                            <h3>CR:</h3>
+                            <p>CR perpendicular to IR, directed to third MCP joint.</p>
+                            <h3>Recommended Collimation:</h3>
+                            <p>Collimate on four sides to the outer margins of hand and wrist.</p>
+                            <h3>Note:</h3>
+                            <p>If examinations of both hands or wrists are requested, the body parts should be positioned and exposed separately for correct CR placement.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </main>
-
+            </main>
 
             {showModel && (
                 <div
                     id="model-viewer-container"
-                    style={{
-                        width: '100%',
-                        height: '100vh',
-                        backgroundColor: 'black',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        zIndex: 10,
-                    }}
+                    className="model-viewer-container"
                 >
                     <button
                         onClick={closeModel}
-                        style={{
-                            position: 'absolute',
-                            top: '20px',
-                            right: '20px',
-                            backgroundColor: 'transparent',
-                            border: 'none',
-                            color: 'white',
-                            fontSize: '30px',
-                            cursor: 'pointer',
-                            zIndex: 20,
-                        }}
+                        className="close-model-btn"
+                        aria-label="Close model viewer"
                     >
                         X
                     </button>
@@ -187,7 +216,7 @@ const Hand = () => {
                     <div
                         id="model-viewer"
                         ref={modelViewerRef}
-                        style={{ width: '100%', height: '100%' }}
+                        className="model-viewer"
                     ></div>
                 </div>
             )}

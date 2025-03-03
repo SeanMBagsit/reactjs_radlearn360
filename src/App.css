@@ -1,3 +1,57 @@
+/* Navbar Styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  color: #000000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  top: 0;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+.navbar:hover {
+  background-color: #457b9d;
+}
+
+header .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  position: relative;
+  text-decoration: none;
+  color: #020202;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  letter-spacing: 0.1em;
+  border-radius: 5px;
+}
+
+/* Hover effect for general links */
+.nav-links a:hover {
+  background-color: #457b9d;
+  color: #ffffff;
+}
+
+/* Active link style */
+.nav-links a.active {
+  background-color: #457b9d;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 5px;
+} 
+
 /* Line effect under the Study, Home, and Simulation links */
 .nav-links a:nth-child(1), 
 .nav-links a:nth-child(2), 
@@ -23,20 +77,52 @@
 .nav-links a:nth-child(1):hover::after,
 .nav-links a:nth-child(2):hover::after,
 .nav-links a:nth-child(3):hover::after {
-  width: 100%; /* Expand the underline on hover */
+  width: 100%;
 }
 
 /* Remove the tooltip effect */
 .nav-links a::after {
-  content: none; /* No tooltip */
+  content: none;
+}
+
+/* Hamburger Menu Styles */
+.hamburger {
+  display: none;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+}
+
+.hamburger span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background-color: #020202;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hamburger Animation */
+.hamburger.open span:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
 }
 
 /* Content Styling */
 .content {
   padding: 40px;
-  margin-top: 60px; /* Adjust for navbar */
+  margin-top: 60px;
   text-align: center;
-  max-width: 1200px; /* Ensure content doesn't stretch too much */
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -56,8 +142,8 @@
   display: flex;
   justify-content: center;
   margin-top: 40px;
-  gap: 20px; /* More spacious gap between images */
-  flex-wrap: wrap; /* Ensures responsiveness */
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 /* Human Body Image Container */
@@ -65,24 +151,24 @@
   position: relative;
   display: inline-block;
   text-align: center;
-  max-width: 590px; /* Set max width for each image */
+  max-width: 590px;
 }
 
 /* Body Image */
 .body-img {
-  width: 100%; /* Ensure full container width */
+  width: 100%;
   height: auto;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 12px; /* Soft rounded corners */
-  border: 3px solid transparent; /* For hover effect */
+  border-radius: 12px;
+  border: 3px solid transparent;
 }
 
 /* Hover Effects */
 .body-img:hover {
-  transform: scale(1.08); /* Smooth zoom effect */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25); /* Enhanced shadow */
-  border-color: rgba(255, 255, 255, 0.5); /* Subtle border */
+  transform: scale(1.08);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 /* Tooltip Styling */
@@ -131,11 +217,55 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .body-img {
-    max-width: 90%; /* Ensure images scale nicely */
+    max-width: 90%;
   }
 }
 
 @media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+  
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem 0;
+    align-items: center;
+    gap: 0;
+    z-index: 999;
+  }
+  
+  .nav-links.open {
+    display: flex;
+  }
+  
+  .nav-links a {
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    border-radius: 0;
+  }
+  
+  .nav-links a:hover {
+    background-color: #f0f0f0;
+    color: #020202;
+  }
+  
+  .nav-links a.active {
+    border-radius: 0;
+    width: 100%;
+  }
+  
+  .nav-links a::after {
+    display: none;
+  }
+  
   .content h1 {
     font-size: 1.8rem;
   }
@@ -148,7 +278,7 @@
 
 @media (max-width: 480px) {
   .body-chart {
-    flex-direction: column; /* Stack images on smaller screens */
+    flex-direction: column;
     gap: 15px;
   }
 
