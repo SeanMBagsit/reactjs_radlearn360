@@ -52,7 +52,7 @@ const Wrist = () => {
                   loadedHandModel.scale.set(7, 7, 7); // Set desired scale
           
                   // Set rotation: x = 0 degrees, y = 0 degrees, z = -100 degrees
-                  loadedHandModel.rotation.set(0, 0, -100 * (Math.PI / 180)); // Convert -100 degrees to radians
+                  loadedHandModel.rotation.set(0, 0, -90 * (Math.PI / 180)); // Convert -100 degrees to radians
           
                   loadedHandModel.position.set(.5, -8, 0);
                   scene.add(loadedHandModel);

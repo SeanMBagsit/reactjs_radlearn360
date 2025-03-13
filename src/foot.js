@@ -54,7 +54,7 @@ const Foot = () => {
                   // Set rotation: x = 0 degrees, y = 0 degrees, z = -100 degrees
                   loadedHandModel.rotation.set(0, 0, 0,); // -Math.PI is -180 degrees in radians
           
-                  loadedHandModel.position.set(.2, -9.5, 0);
+                  loadedHandModel.position.set(.2, -9.5, -.6);
                   scene.add(loadedHandModel);
               },
               undefined,

@@ -10,6 +10,7 @@ import Lower from "./lower-ex";
 import Foot from "./foot";
 import Ankle from "./ankle";
 import Simulation from "./simulation";
+import SignUp from "./signup";
 import Homepage from "./homepage";
 
 const App = () => {
@@ -80,6 +81,14 @@ const App = () => {
           >
             Simulation
           </NavLink>
+
+          <NavLink 
+            to="/signup" 
+            className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={closeMenu}
+          >
+            Sign Up
+          </NavLink>
         </nav>
       </header>
 
@@ -94,6 +103,7 @@ const App = () => {
         <Route path="/lower" element={<Lower />} />
         <Route path="/foot" element={<Foot />} />
         <Route path="/ankle" element={<Ankle />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/simulation" element={<Simulation />} />
       </Routes>
     </div>

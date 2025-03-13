@@ -78,7 +78,7 @@ const Hand = () => {
                         }
                     });
                     // Set hand to target position directly
-                    loadedHandModel.position.set(.2, -10, 0);
+                    loadedHandModel.position.set(.3, -10, -.5);
                     scene.add(loadedHandModel);
                 },
                 undefined,

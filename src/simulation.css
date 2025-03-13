@@ -1,336 +1,539 @@
 /* General styles */
 body {
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+
+.container {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: fixed;
+}
+
+/* Intro screen */
+.intro-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: clamp(18px, 4vw, 24px);
+  overflow: hidden;
+}
+
+.start-button {
+  background-color: blue;
+  color: white;
+  padding: clamp(8px, 2vw, 12px) clamp(12px, 4vw, 24px);
+  border: none;
+  border-radius: 5px;
+  font-size: clamp(14px, 3.5vw, 20px);
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.start-button:active {
+  transform: scale(0.98);
+}
+
+/* Model viewer */
+.model-viewer-container {
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.model-viewer {
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+/* Buttons */
+.exit-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  font-size: clamp(16px, 4vw, 24px);
+  cursor: pointer;
+  z-index: 20;
+  padding: 5px 10px;
+  border-radius: 50%;
+  width: clamp(30px, 8vw, 40px);
+  height: clamp(30px, 8vw, 40px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.verify-button {
+  position: absolute;
+  bottom: 50px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 2px solid white;
+  color: white;
+  padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2.5vw, 15px);
+  cursor: pointer;
+  font-size: clamp(12px, 2.5vw, 16px);
+  z-index: 20;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.next-button {
+  position: absolute;
+  bottom: max(80px, 15vh);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: green;
+  color: white;
+  padding: clamp(8px, 2vw, 15px) clamp(12px, 3vw, 24px);
+  border: none;
+  border-radius: 9px;
+  font-size: clamp(16px, 3.5vw, 24px);
+  cursor: pointer;
+  z-index: 20;
+  width: clamp(90px, 35vw, 180px);
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Progress tracker */
+.progress-container {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(200px, 70vw, 300px);
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 5px;
+  border-radius: 5px;
+  z-index: 15;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: green;
+  border-radius: 5px;
+}
+
+.progress-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: black;
+  font-size: clamp(10px, 2.5vw, 14px);
+  top: 3px;
+  font-weight: bold;
+}
+
+/* Feedback messages */
+.feedback-message {
+  position: absolute;
+  top: 10rem;
+  width: 90%;
+  height: fit-content;
+  left: 5%;
+  text-align: center;
+  font-size: clamp(14px, 3.5vw, 20px);
+  font-weight: bold;
+  z-index: 15;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 8px;
+  border-radius: 6px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Position and rotation info */
+.model-info {
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  color: white;
+  font-size: clamp(9px, 2vw, 14px);
+  z-index: 15;
+  max-width: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.rotation-controls {
+  position: absolute;
+  bottom: 50px;
+  right: 10px;
+  color: white;
+  font-size: clamp(9px, 2vw, 14px);
+  z-index: 15;
+  width: clamp(100px, 35vw, 180px);
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.rotation-control {
+  margin-bottom: 8px;
+}
+
+.rotation-slider {
+  width: 100%;
+  margin-top: 4px;
+  height: clamp(20px, 5vw, 30px);
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.rotation-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: clamp(16px, 4vw, 24px);
+  height: clamp(16px, 4vw, 24px);
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.rotation-slider::-moz-range-thumb {
+  width: clamp(16px, 4vw, 24px);
+  height: clamp(16px, 4vw, 24px);
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Timer */
+.timer {
+  position: absolute;
+  top: 20px;
+  right: 50px;
+  text-align: right;
+  color: white;
+  font-size: clamp(10px, 2.5vw, 14px);
+  z-index: 15;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.timer p {
+  margin: 0;
+  font-weight: bold;
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  touch-action: none;
+}
+
+.modal {
+  background-color: #f8f9fa;
+  padding: clamp(12px, 4vw, 24px);
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  width: clamp(260px, 85vw, 380px);
+  max-height: 80vh;
+  overflow-y: auto;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+  margin: 15px;
+}
+
+.modal h2 {
+  color: #333;
+  margin-bottom: 12px;
+  font-size: clamp(16px, 3.5vw, 22px);
+}
+
+.modal p {
+  color: #555;
+  font-size: clamp(12px, 2.8vw, 15px);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.modal-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.modal-button {
+  padding: clamp(6px, 2vw, 10px) clamp(12px, 4vw, 20px);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: clamp(12px, 2.8vw, 15px);
+  font-weight: bold;
+  transition: background 0.3s;
+  flex: 1;
+  min-width: 80px;
+  max-width: 120px;
+}
+
+.ok-button {
+  background-color: #007bff;
+}
+
+.ok-button:hover, .ok-button:active {
+  background-color: #0056b3;
+}
+
+.confirm-button {
+  background-color: #28a745;
+  margin-right: 6px;
+}
+
+.confirm-button:hover, .confirm-button:active {
+  background-color: #218838;
+}
+
+.cancel-button {
+  background-color: #dc3545;
+}
+
+.cancel-button:hover, .cancel-button:active {
+  background-color: #c82333;
+}
+
+/* Results modal */
+.score-text {
+  font-size: clamp(14px, 3.2vw, 17px);
+  font-weight: bold;
+  margin: 12px 0;
+}
+
+.final-score {
+  font-size: clamp(16px, 3.5vw, 19px);
+  font-weight: bold;
+  color: #28a745;
+}
+
+.success-message {
+  color: #28a745;
+  font-size: clamp(13px, 2.8vw, 15px);
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+/* For small mobile devices */
+@media (max-width: 380px) {
+  .verify-button {
+    bottom: 45px;
+    left: 15px;
+    font-size: 11px;
+    padding: 5px 8px;
+    position:absolute;
+    bottom:5rem;
+
   }
   
-  /* Intro screen */
-  .intro-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: clamp(20px, 5vw, 30px);
-  }
-  
-  .start-button {
-    background-color: blue;
-    color: white;
-    padding: clamp(10px, 3vw, 15px) clamp(15px, 5vw, 30px);
-    border: none;
-    border-radius: 5px;
-    font-size: clamp(16px, 4vw, 24px);
-    cursor: pointer;
-  }
-  
-  /* Model viewer */
-  .model-viewer-container {
-    width: 100%;
-    height: 100vh;
-    background-color: black;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 10;
-  }
-  
-  .model-viewer {
-    width: 100%;
-    height: 100%;
-  }
-  
-  /* Buttons */
-  .exit-button {
-    position: absolute;
+  .timer {
     top: 10px;
-    right: 10px;
-    background-color: transparent;
-    border: none;
-    color: white;
-    font-size: clamp(20px, 5vw, 30px);
-    cursor: pointer;
-    z-index: 20;
+    right: 40px;
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+  
+  .exit-button {
+    top: 5px;
+    right: 5px;
+    font-size: 14px;
+    width: 28px;
+    height: 28px;
+  }
+  
+  .rotation-controls {
+    bottom: 70px;
+    width: 95px;
+    padding: 5px;
+    font-size: 8px;
+  }
+  
+  .rotation-control {
+    margin-bottom: 3px;
+  }
+  
+  .model-info {
+    font-size: 8px;
+    padding: 3px;
+    top: 40px;
+  }
+
+  .next-button {
+    bottom: 65px;
+    font-size: 14px;
+    width: 80px;
+  }
+
+  .feedback-message {
+    bottom: 110px;
+    font-size: 12px;
     padding: 5px;
   }
-  
+
+  .progress-container {
+    width: 70%;
+    top: 5px;
+  }
+
+  .progress-text {
+    font-size: 9px;
+    top: 14px;
+  }
+}
+
+/* For larger mobile devices and small tablets */
+@media (min-width: 381px) and (max-width: 767px) {
   .verify-button {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
-    background-color: transparent;
-    border: 2px solid white;
-    color: white;
-    padding: clamp(8px, 2vw, 10px);
-    cursor: pointer;
-    font-size: clamp(14px, 3vw, 18px);
-    z-index: 20;
-  }
-  
-  .next-button {
-    position: absolute;
-    bottom: clamp(70px, 15vh, 100px);
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: green;
-    color: white;
-    padding: clamp(10px, 3vw, 20px) clamp(15px, 4vw, 30px);
-    border: none;
-    border-radius: 9px;
-    font-size: clamp(18px, 4vw, 30px);
-    cursor: pointer;
-    z-index: 20;
-    width: clamp(100px, 40vw, 200px);
-    text-align: center;
-  }
-  
-  .button-disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
-  /* Progress tracker */
-  .progress-container {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 5px;
-    border-radius: 5px;
-    z-index: 15;
-  }
-  
-  .progress-bar {
-    height: 10px;
-    background-color: green;
-    border-radius: 5px;
-  }
-  
-  .progress-text {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-    color: white;
-    font-size: clamp(12px, 3vw, 16px);
-    top: 15px;
-  }
-  
-  /* Feedback messages */
-  .feedback-message {
-    position: absolute;
-    bottom: 60px;
-    width: 90%;
-    left: 5%;
-    text-align: center;
-    font-size: clamp(16px, 4vw, 24px);
-    font-weight: bold;
-    z-index: 15;
-  }
-  
-  /* Position and rotation info */
-  .model-info {
-    position: absolute;
-    top: 40px;
-    left: 10px;
-    color: white;
-    font-size: clamp(10px, 3vw, 18px);
-    z-index: 15;
-    max-width: 50%;
+    bottom: 12rem;
+    left: 15px;
   }
   
   .rotation-controls {
     position: absolute;
-    bottom: 20px;
+    bottom: 7rem;
     right: 10px;
-    color: white;
-    font-size: clamp(10px, 3vw, 18px);
-    z-index: 15;
-    width: clamp(120px, 40vw, 200px);
   }
   
-  .rotation-control {
-    margin-bottom: 10px;
-  }
-  
-  .rotation-slider {
-    width: 100%;
-  }
-  
-  /* Timer */
-  .timer {
+  .next-button {
     position: absolute;
-    top: 20px;
-    right: 50px;
-    text-align: right;
-    color: white;
-    font-size: clamp(12px, 3vw, 18px);
-    z-index: 15;
+    bottom: 15rem;
+    left: 80px;
+  }
+
+  .feedback-message {
+    position: absolute;
+    top: 10rem;
+  }
+
+  .timer{
+    position: absolute;
+    top: 5rem;
+  }
+
+  .progress-text{
+    position: absolute;
+    top: 0.3rem;
+  }
+}
+
+/* For tablets */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .verify-button {
+    font-size: 14px;
+    padding: 8px 12px;
   }
   
-  /* Modals */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
+  .rotation-controls {
+    width: 150px;
+    font-size: 12px;
+  }
+  
+  .model-info {
+    font-size: 12px;
   }
   
   .modal {
-    background-color: #f8f9fa;
-    padding: clamp(15px, 5vw, 30px);
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    width: clamp(280px, 90vw, 400px);
-    max-height: 80vh;
-    overflow-y: auto;
-    text-align: center;
-    animation: fadeIn 0.3s ease-in-out;
-    margin: 15px;
+    width: 70%;
+    max-width: 500px;
+  }
+}
+
+/* Fix for preventing Safari from bouncing */
+html {
+  position: fixed;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Touch-friendly controls for mobile */
+@media (pointer: coarse) {
+  button {
+    min-height: 44px; /* Apple's recommended minimum touch target size */
   }
   
-  .modal h2 {
-    color: #333;
-    margin-bottom: 15px;
-    font-size: clamp(18px, 4vw, 24px);
+  .rotation-slider {
+    height: 30px;
   }
   
-  .modal p {
-    color: #555;
-    font-size: clamp(14px, 3vw, 16px);
-    line-height: 1.5;
+  .exit-button {
+    min-height: 35px;
+    min-width: 35px;
   }
   
-  .modal-buttons {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
+  input[type="range"] {
+    margin: 8px 0;
   }
   
-  .modal-button {
-    padding: clamp(8px, 3vw, 12px) clamp(16px, 5vw, 24px);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: clamp(14px, 3vw, 16px);
-    font-weight: bold;
-    transition: background 0.3s;
-    flex: 1;
-    min-width: 100px;
-    max-width: 150px;
+  .modal button {
+    padding: 10px;
   }
-  
-  .ok-button {
-    background-color: #007bff;
-  }
-  
-  .ok-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .confirm-button {
-    background-color: #28a745;
-    margin-right: 10px;
-  }
-  
-  .confirm-button:hover {
-    background-color: #218838;
-  }
-  
-  .cancel-button {
-    background-color: #dc3545;
-  }
-  
-  .cancel-button:hover {
-    background-color: #c82333;
-  }
-  
-  /* Results modal */
-  .score-text {
-    font-size: clamp(16px, 3.5vw, 18px);
-    font-weight: bold;
-    margin: 15px 0;
-  }
-  
-  .final-score {
-    font-size: clamp(18px, 4vw, 20px);
-    font-weight: bold;
-    color: #28a745;
-  }
-  
-  .success-message {
-    color: #28a745;
-    font-size: clamp(14px, 3vw, 16px);
-    margin-top: 15px;
-    font-weight: bold;
-  }
-  
-  /* For small mobile devices */
-  @media (max-width: 576px) {
-    .verify-button, .timer {
-      font-size: 12px;
-    }
-    
-    .model-info, .rotation-controls {
-      font-size: 10px;
-    }
-    
-    .timer {
-      top: 10px;
-      right: 40px;
-    }
-    
-    .exit-button {
-      top: 5px;
-      right: 5px;
-    }
-    
-    .rotation-controls {
-      bottom: 60px;
-      width: 120px;
-    }
-    
-    .rotation-control {
-      margin-bottom: 5px;
-    }
-  }
-  
-  /* Animation */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Touch-friendly controls for mobile */
-  @media (pointer: coarse) {
-    .rotation-slider {
-      height: 30px;
-    }
-    
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 25px;
-      height: 25px;
-      background: white;
-      border-radius: 50%;
-    }
-  }
+}
+
+/* Prevent double-tap zoom on iOS */
+* {
+  touch-action: manipulation;
+}
+
+/* Disable text selection for better mobile experience */
+.model-viewer-container * {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Better visibility for controls on low-contrast backgrounds */
+.verify-button, .rotation-controls, .model-info, .timer {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}

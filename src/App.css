@@ -1,4 +1,11 @@
 /* Navbar Styles */
+.logo-link {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Keeps the text color the same as the parent */
+  cursor: pointer; /* Makes it clickable */
+  font-weight: inherit; /* Keeps the same font weight */
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
