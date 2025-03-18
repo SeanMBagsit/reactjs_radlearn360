@@ -6,7 +6,35 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const Foot = () => {
     const [showModel, setShowModel] = useState(false);
-    const modelViewerRef = useRef(null);
+            const modelViewerRef = useRef(null);
+            const rendererRef = useRef(null);
+            const sceneRef = useRef(null);
+            const cameraRef = useRef(null);
+            const controlsRef = useRef(null);
+        
+         // State to manage modal visibility
+            const [isModalOpen, setIsModalOpen] = useState(false);
+        
+            // Function to open the modal
+            const openModal = () => {
+                setIsModalOpen(true);
+            };
+        
+            // Function to close the modal
+            const closeModal = () => {
+                setIsModalOpen(false);
+            };
+        
+            // Handle window resize
+            const handleResize = () => {
+                if (showModel && cameraRef.current && rendererRef.current) {
+                    const width = window.innerWidth;
+                    const height = window.innerHeight;
+                    cameraRef.current.aspect = width / height;
+                    cameraRef.current.updateProjectionMatrix();
+                    rendererRef.current.setSize(width, height);
+                }
+            };
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'; // Prevent scroll when model is shown
@@ -54,7 +82,7 @@ const Foot = () => {
                   // Set rotation: x = 0 degrees, y = 0 degrees, z = -100 degrees
                   loadedHandModel.rotation.set(0, 0, 0,); // -Math.PI is -180 degrees in radians
           
-                  loadedHandModel.position.set(.2, -9.5, -.6);
+                  loadedHandModel.position.set(.2, -9.5, 1.5);
                   scene.add(loadedHandModel);
               },
               undefined,
@@ -113,16 +141,27 @@ const Foot = () => {
     };
 
     return (
-        <div>
-        <main className="contentmodels">
-        <div className="procedure-container">
-        <div className="image-section">
-            <div className="black-box" onClick={handleClick}>
-                <img src="/pics/foot.png" alt="Hand Image" className="black-box-image" />
-                <p>Click to View 3D Model</p>
-            </div>
-        </div>
-                <div className="text-section">
+         <div>
+            <main className="contentmodels">
+                <div className="procedure-container">
+                    {/* Image Section with 3D Model */}
+                    <div className="image-section">
+                        <div className="black-box" onClick={handleClick}>
+                            <img src="/pics/foot.png" alt="Foot Image" className="black-box-image" />
+                            <p>Click to View 3D Model</p>
+                        </div>
+                    </div>
+
+                    {/* Image Section with Demo Video */}
+                    <div className="image-section">
+                        <div className="black-box" onClick={openModal}>
+                            <img src="/pics/foot.png" alt="Foot Image" className="black-box-image" />
+                            <p>Click to View Demo Video</p>
+                        </div>
+                    </div>
+
+                    {/* Text Section */}
+                    <div className="text-section">
                     <h2>Clinical Details:</h2>
                     <div className="scrollable-box">
                     <h2>Clinical Indications:</h2>
@@ -158,9 +197,10 @@ const Foot = () => {
                         <p>Collimate to outer margins of the foot on four sides.</p>
                     </div>
                 </div>
-            </div>
-        </main>
+                </div>
+            </main>
 
+            {/* Modal for 3D Model */}
             {showModel && (
                 <div
                     id="model-viewer-container"
@@ -196,6 +236,39 @@ const Foot = () => {
                         ref={modelViewerRef}
                         style={{ width: '100%', height: '100%' }}
                     ></div>
+                </div>
+            )}
+
+            {/* Modal for Demo Video */}
+            {isModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        {/* Close Button */}
+                        <button className="close-modal-btn" onClick={closeModal} aria-label="Close modal">
+                            X
+                        </button>
+                        {/* YouTube Video */}
+                        <iframe
+                            width="560"
+                            height="315"
+                            src="https://www.youtube.com/embed/au55A6jx5AU"
+                            title="Demo Video for AP Hand"
+                            frameBorder="2"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        ></iframe>
+                        {/* Description */}
+                        <div className="modal-description">
+                            <p>
+                                <strong>Timestamp Reference:</strong> The AP foot positioning starts at <strong>0:00</strong> until <strong>0:40</strong> in the video.
+                            </p>
+                        </div>
+                        <div className="modal-description">
+                            <p>
+                                <strong>Credits to owner of the video:</strong> @xrayimaginglady2586
+                            </p>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

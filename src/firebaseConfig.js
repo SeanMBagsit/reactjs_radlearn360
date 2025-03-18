@@ -5,13 +5,15 @@ import { getAuth } from "firebase/auth";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBDuZot1h2L3w4nfIM-oq7LoB-wvOg4HYg", // Replace with your actual API key
-  authDomain: "radlearn360.firebaseapp.com",
-  projectId: "radlearn360",
-  storageBucket: "radlearn360.appspot.com",
-  messagingSenderId: "668579421436",
-  appId: "1:668579421436:web:7d1bbf58791c2a01b58b79"
+  apiKey: "AIzaSyBDuZot1h2L3w4nfIM-oq7LoB-wvOg4HYg",
+  authDomain: "reactjsradlearn360.firebaseapp.com",
+  projectId: "reactjsradlearn360",
+  storageBucket: "reactjsradlearn360.firebasestorage.app",
+  messagingSenderId: "845489737794",
+  appId: "1:845489737794:web:5d5de7d5c6e8c045949ddb",
+  measurementId: "G-HP6JBZHMGN"
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

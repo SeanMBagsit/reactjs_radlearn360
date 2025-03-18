@@ -1,0 +1,81 @@
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Modal Content */
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+    width: 80%;
+    max-width: 600px;
+    max-height: 600px;
+    text-align: center;
+}
+
+/* Close Button */
+.close-modal-btn {
+    position: absolute;
+    top: -15px; /* Move the button above the modal */
+    right: -15px; /* Move the button to the right of the modal */
+    background: transparent; /* Make the button clear */
+    color: white; /* Keep the text color visible against the overlay */
+    border: none; /* Remove any borders */
+    border-radius: 50%; /* Keep the circular shape */
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001; /* Ensure it stays above everything */
+}
+
+/* Hover effect for the close button (optional) */
+.close-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.2); /* Slight background on hover for better visibility */
+}
+
+/* Description */
+.modal-description {
+    margin-top: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: left;
+    color: black;
+}
+
+.modal-description p {
+    margin: 5px 0;
+}
+
+/* Responsive Iframe Container */
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio (height / width * 100) */
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+/* Responsive Iframe */
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none; /* Remove iframe border */
+}

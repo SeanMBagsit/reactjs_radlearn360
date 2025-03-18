@@ -5,8 +5,37 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const Ankle = () => {
-    const [showModel, setShowModel] = useState(false);
-    const modelViewerRef = useRef(null);
+     const [showModel, setShowModel] = useState(false);
+        const modelViewerRef = useRef(null);
+        const rendererRef = useRef(null);
+        const sceneRef = useRef(null);
+        const cameraRef = useRef(null);
+        const controlsRef = useRef(null);
+    
+        // State to manage modal visibility
+        const [isModalOpen, setIsModalOpen] = useState(false);
+    
+        // Function to open the modal
+        const openModal = () => {
+            setIsModalOpen(true);
+        };
+    
+        // Function to close the modal
+        const closeModal = () => {
+            setIsModalOpen(false);
+        };
+    
+        // Handle window resize
+        const handleResize = () => {
+            if (showModel && cameraRef.current && rendererRef.current) {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                cameraRef.current.aspect = width / height;
+                cameraRef.current.updateProjectionMatrix();
+                rendererRef.current.setSize(width, height);
+            }
+        };
+    
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'; // Prevent scroll when model is shown
@@ -59,7 +88,7 @@ const Ankle = () => {
                     );
             
                     // Set position
-                    loadedHandModel.position.set(2.7, -8.0, -.5);
+                    loadedHandModel.position.set(1.7, -8.5, -.1);
                     scene.add(loadedHandModel);
                 },
                 undefined,
@@ -121,15 +150,26 @@ const Ankle = () => {
 
     return (
         <div>
-         <main className="contentmodels">
-        <div className="procedure-container">
-        <div className="image-section">
-            <div className="black-box" onClick={handleClick}>
-                <img src="/pics/ankle.png" alt="Ankle Image" className="black-box-image" />
-                <p>Click to View 3D Model</p>
-            </div>
-        </div>
-        <div className="text-section">
+        <main className="contentmodels">
+            <div className="procedure-container">
+                {/* Image Section with 3D Model */}
+                <div className="image-section">
+                    <div className="black-box" onClick={handleClick}>
+                        <img src="/pics/ankle.png" alt="Ankle Image" className="black-box-image" />
+                        <p>Click to View 3D Model</p>
+                    </div>
+                </div>
+
+                {/* Image Section with Demo Video */}
+                <div className="image-section">
+                    <div className="black-box" onClick={openModal}>
+                        <img src="/pics/ankle.png" alt="Ankle Image" className="black-box-image" />
+                        <p>Click to View Demo Video</p>
+                    </div>
+                </div>
+
+                {/* Text Section */}
+                <div className="text-section">
     <h2>Clinical Details</h2>
     <div className="scrollable-box">
         <h3>Clinical Indications:</h3>
@@ -162,47 +202,81 @@ const Ankle = () => {
         <p>Collimate to include the distal tibia and fibula to the midmetatarsal area.</p>
           </div>
         </div>
-        </div>
-      </main>
+            </div>
+        </main>
 
-            {showModel && (
-                <div
-                    id="model-viewer-container"
+        {/* Modal for 3D Model */}
+        {showModel && (
+            <div
+                id="model-viewer-container"
+                style={{
+                    width: '100%',
+                    height: '100vh',
+                    backgroundColor: 'black',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    zIndex: 10,
+                }}
+            >
+                <button
+                    onClick={closeModel}
                     style={{
-                        width: '100%',
-                        height: '100vh',
-                        backgroundColor: 'black',
                         position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        zIndex: 10,
+                        top: '20px',
+                        right: '20px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: 'white',
+                        fontSize: '30px',
+                        cursor: 'pointer',
+                        zIndex: 20,
                     }}
                 >
-                    <button
-                        onClick={closeModel}
-                        style={{
-                            position: 'absolute',
-                            top: '20px',
-                            right: '20px',
-                            backgroundColor: 'transparent',
-                            border: 'none',
-                            color: 'white',
-                            fontSize: '30px',
-                            cursor: 'pointer',
-                            zIndex: 20,
-                        }}
-                    >
+                    X
+                </button>
+
+                <div
+                    id="model-viewer"
+                    ref={modelViewerRef}
+                    style={{ width: '100%', height: '100%' }}
+                ></div>
+            </div>
+        )}
+
+        {/* Modal for Demo Video */}
+        {isModalOpen && (
+            <div className="modal-overlay">
+                <div className="modal-content">
+                    {/* Close Button */}
+                    <button className="close-modal-btn" onClick={closeModal} aria-label="Close modal">
                         X
                     </button>
-
-                    <div
-                        id="model-viewer"
-                        ref={modelViewerRef}
-                        style={{ width: '100%', height: '100%' }}
-                    ></div>
+                    {/* YouTube Video */}
+                    <iframe
+                        width="560"
+                        height="315"
+                        src="https://www.youtube.com/embed/-dCqrlN6Kb0"
+                        title="Demo Video for AP Hand"
+                        frameBorder="2"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    ></iframe>
+                    {/* Description */}
+                    <div className="modal-description">
+                        <p>
+                            <strong>Timestamp Reference:</strong> The Lateral ankle positioning starts at <strong>1:02</strong> until <strong>1:36</strong> in the video.
+                        </p>
+                    </div>
+                    <div className="modal-description">
+                        <p>
+                            <strong>Credits to owner of the video:</strong> @xrayimaginglady2586
+                        </p>
+                    </div>
                 </div>
-            )}
-        </div>
+            </div>
+        )}
+    </div>
     );
 };
 

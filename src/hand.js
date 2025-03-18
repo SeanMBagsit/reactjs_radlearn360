@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './ankle.css';
+import './hand.css';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -12,15 +12,26 @@ const Hand = () => {
     const cameraRef = useRef(null);
     const controlsRef = useRef(null);
 
+    // State to manage modal visibility
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Function to open the modal
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    // Function to close the modal
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
     // Handle window resize
     const handleResize = () => {
         if (showModel && cameraRef.current && rendererRef.current) {
             const width = window.innerWidth;
             const height = window.innerHeight;
-            
             cameraRef.current.aspect = width / height;
             cameraRef.current.updateProjectionMatrix();
-            
             rendererRef.current.setSize(width, height);
         }
     };
@@ -28,11 +39,11 @@ const Hand = () => {
     useEffect(() => {
         if (showModel) {
             document.body.style.overflow = 'hidden'; // Prevent scroll when model is shown
-            
+
             // Initialize scene
             const scene = new THREE.Scene();
             sceneRef.current = scene;
-            
+
             // Initialize camera
             const camera = new THREE.PerspectiveCamera(
                 30,
@@ -49,7 +60,7 @@ const Hand = () => {
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             rendererRef.current = renderer;
-            
+
             if (modelViewerRef.current) {
                 modelViewerRef.current.innerHTML = '';
                 modelViewerRef.current.appendChild(renderer.domElement);
@@ -77,8 +88,7 @@ const Hand = () => {
                             child.receiveShadow = true;
                         }
                     });
-                    // Set hand to target position directly
-                    loadedHandModel.position.set(.3, -10, -.5);
+                    loadedHandModel.position.set(0.3, -10, -0.5);
                     scene.add(loadedHandModel);
                 },
                 undefined,
@@ -120,23 +130,22 @@ const Hand = () => {
 
             const animate = () => {
                 if (!showModel) return;
-                
                 requestAnimationFrame(animate);
                 if (controlsRef.current) controlsRef.current.update();
                 if (rendererRef.current && sceneRef.current && cameraRef.current) {
                     rendererRef.current.render(sceneRef.current, cameraRef.current);
                 }
             };
+
             animate();
 
             // Cleanup function
             return () => {
                 window.removeEventListener('resize', handleResize);
                 document.body.style.overflow = 'auto'; // Restore scroll
-                
                 if (rendererRef.current) rendererRef.current.dispose();
                 if (controlsRef.current) controlsRef.current.dispose();
-                
+
                 // Clear references
                 rendererRef.current = null;
                 sceneRef.current = null;
@@ -158,12 +167,23 @@ const Hand = () => {
         <div>
             <main className="contentmodels">
                 <div className="procedure-container">
+                    {/* Image Section with 3D Model */}
                     <div className="image-section">
                         <div className="black-box" onClick={handleClick}>
                             <img src="/pics/hand.png" alt="Hand Image" className="black-box-image" />
                             <p>Click to View 3D Model</p>
                         </div>
                     </div>
+
+                    {/* Image Section with Demo Video */}
+                    <div className="image-section">
+                        <div className="black-box" onClick={openModal}>
+                            <img src="/pics/hand.png" alt="Hand Image" className="black-box-image" />
+                            <p>Click to View Demo Video</p>
+                        </div>
+                    </div>
+
+                    {/* Text Section */}
                     <div className="text-section">
                         <h2>Clinical Details:</h2>
                         <div className="scrollable-box">
@@ -200,15 +220,33 @@ const Hand = () => {
                 </div>
             </main>
 
+            {/* Modal for 3D Model */}
             {showModel && (
                 <div
                     id="model-viewer-container"
-                    className="model-viewer-container"
+                    style={{
+                        width: '100%',
+                        height: '100vh',
+                        backgroundColor: 'black',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        zIndex: 10,
+                    }}
                 >
                     <button
                         onClick={closeModel}
-                        className="close-model-btn"
-                        aria-label="Close model viewer"
+                        style={{
+                            position: 'absolute',
+                            top: '20px',
+                            right: '20px',
+                            backgroundColor: 'transparent',
+                            border: 'none',
+                            color: 'white',
+                            fontSize: '30px',
+                            cursor: 'pointer',
+                            zIndex: 20,
+                        }}
                     >
                         X
                     </button>
@@ -216,8 +254,40 @@ const Hand = () => {
                     <div
                         id="model-viewer"
                         ref={modelViewerRef}
-                        className="model-viewer"
+                        style={{ width: '100%', height: '100%' }}
                     ></div>
+                </div>
+            )}
+
+            {/* Modal for Demo Video */}
+            {isModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        {/* Close Button */}
+                        <button className="close-modal-btn" onClick={closeModal} aria-label="Close modal">
+                            X
+                        </button>
+                        {/* YouTube Video */}
+                        <div className="video-container">
+                        <iframe
+                            src="https://www.youtube.com/embed/VKjm3tao3GA"
+                            title="Demo Video for AP Hand"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        ></iframe>
+                         </div>
+                        {/* Description */}
+                        <div className="modal-description">
+                            <p>
+                                <strong>Timestamp Reference:</strong> The PA hand positioning starts at <strong>0:00</strong> until <strong>0:48</strong> in the video.
+                            </p>
+                        </div>
+                        <div className="modal-description">
+                            <p>
+                                <strong>Credits to owner of the video:</strong> @xrayimaginglady2586
+                            </p>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

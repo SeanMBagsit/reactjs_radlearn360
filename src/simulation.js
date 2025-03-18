@@ -3,6 +3,8 @@
     import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
     import { DragControls } from 'three/examples/jsm/controls/DragControls';
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+    import { doc, setDoc } from "firebase/firestore"; // Import Firestore functions
+    import { db, auth } from "./firebaseConfig"; // Import centralized db and auth
     import './simulation.css';
 
     const Simulation = () => {
@@ -72,7 +74,7 @@
             },
             {
                 ModelFile: '/models/foot.glb',
-                targetPosition: { x: -0.08, y: -7.61, z: -0.58 },
+                targetPosition: { x: 0.22, y: -7.90, z: 1.26 },
                 targetRotation: { 
                     x: 0,
                     y: 0,
@@ -85,7 +87,7 @@
             {
                 
                 ModelFile: '/models/foot.glb',
-                targetPosition: { x: -8.25, y: -0.63, z: 2.36 }, 
+                targetPosition: { x: -8.67, y: 0.24, z: 1.59 }, 
                 targetRotation: { 
                     x: -Math.PI,
                     y: Math.PI / 2,
@@ -400,22 +402,49 @@
             }
           };
         
-        const handleEndSimulation = () => {
+          const handleEndSimulation = () => {
             const totalItems = simulationSettings.length;
             const rawScore = passedCount;
-        
             setShowResultModal(true);
             setFinalScore({ correct: rawScore, total: totalItems });
-        
             setShowModel(true);
             setShowIntro(false);
         
+            // Get the current user
+            console.log("Current user:", auth.currentUser); // Debugging log
+            if (!auth.currentUser) {
+                console.error("No user is currently signed in.");
+                return;
+            }
+        
+            const user = auth.currentUser;
+            
+        
+            if (user) {
+                // Save the score to Firestore
+                const userDocRef = doc(db, "users", user.uid); // Reference to the user's document
+                const scoreData = {
+                    score: rawScore,
+                    total: totalItems,
+                    timestamp: new Date()
+                };
+        
+                // Update or create a 'scores' subcollection for the user
+                const scoreDocRef = doc(userDocRef, "scores", new Date().toISOString()); // Unique ID based on timestamp
+                setDoc(scoreDocRef, scoreData)
+                    .then(() => {
+                        console.log("Score saved to Firestore successfully.");
+                    })
+                    .catch((error) => {
+                        console.error("Error saving score to Firestore:", error);
+                    });
+            }
+        
+            // Optionally, keep the Google Forms submission if needed
             const googleFormURL = "https://docs.google.com/forms/d/e/1FAIpQLSevZ7KVQ9la2o-VlwSH9cuQKw9JE5eiAuwvqq8TLCW2KHbBtg/formResponse";
             const scoreEntryID = "entry.332590206";
-        
             const formData = new FormData();
             formData.append(scoreEntryID, rawScore);
-        
             fetch(googleFormURL, {
                 method: "POST",
                 mode: "no-cors",
@@ -428,7 +457,7 @@
                 console.error("Error submitting score to Google Forms:", error);
             });
         };
-        
+
         const handleExitSimulation = () => {
             const confirmation = window.confirm('Are you sure you want to exit? All progress will be lost.');
             if (confirmation) {

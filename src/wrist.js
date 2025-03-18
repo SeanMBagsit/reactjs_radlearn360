@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './ankle.css';
+import './wrist.css';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -7,6 +7,20 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 const Wrist = () => {
     const [showModel, setShowModel] = useState(false);
     const modelViewerRef = useRef(null);
+
+
+     // State to manage modal visibility
+        const [isModalOpen, setIsModalOpen] = useState(false);
+    
+        // Function to open the modal
+        const openModal = () => {
+            setIsModalOpen(true);
+        };
+    
+        // Function to close the modal
+        const closeModal = () => {
+            setIsModalOpen(false);
+        };
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'; // Prevent scroll when model is shown
@@ -117,14 +131,23 @@ const Wrist = () => {
 
     return (
         <div>
-          <main className="contentmodels">
-    <div className="procedure-container">
-        <div className="image-section">
-            <div className="black-box" onClick={handleClick}>
-                <img src="/pics/wrist.png" alt="Wrist Image" className="black-box-image" />
-                <p>Click to View 3D Model</p>
-            </div>
-        </div>
+            <main className="contentmodels">
+            <div className="procedure-container">
+                    {/* Image Section with 3D Model */}
+                    <div className="image-section">
+                        <div className="black-box" onClick={handleClick}>
+                            <img src="/pics/wrist.png" alt="Wrist Image" className="black-box-image" />
+                            <p>Click to View 3D Model</p>
+                        </div>
+                    </div>
+
+                    {/* Image Section with Demo Video */}
+                    <div className="image-section">
+                        <div className="black-box" onClick={openModal}>
+                            <img src="/pics/wrist.png" alt="Wrist Image" className="black-box-image" />
+                            <p>Click to View Demo Video</p>
+                        </div>
+                    </div>
         <div className="text-section">
             <h2>Clinical Details</h2>
             <div className="scrollable-box">
@@ -162,9 +185,7 @@ const Wrist = () => {
     </div>
 </main>
 
-
-
-
+            {/* Modal for 3D Model */}
             {showModel && (
                 <div
                     id="model-viewer-container"
@@ -200,6 +221,39 @@ const Wrist = () => {
                         ref={modelViewerRef}
                         style={{ width: '100%', height: '100%' }}
                     ></div>
+                </div>
+            )}
+
+            {/* Modal for Demo Video */}
+            {isModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        {/* Close Button */}
+                        <button className="close-modal-btn" onClick={closeModal} aria-label="Close modal">
+                            X
+                        </button>
+                        {/* YouTube Video */}
+                        <iframe
+                            width="560"
+                            height="315"
+                            src="https://www.youtube.com/embed/tZpo2bR8k4w"
+                            title="Demo Video for Lateral Wrist"
+                            frameBorder="2"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        ></iframe>
+                        {/* Description */}
+                        <div className="modal-description">
+                            <p>
+                                <strong>Timestamp Reference:</strong> The Lateral wrist positioning starts at <strong>1:20</strong> until <strong>1:42</strong> in the video.
+                            </p>
+                        </div>
+                        <div className="modal-description">
+                            <p>
+                                <strong>Credits to owner of the video:</strong> @xrayimaginglady2586
+                            </p>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
