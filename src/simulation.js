@@ -65,7 +65,6 @@
                                 "Minimum SID: 40 inches (100 cm).",
                                 "IR size: 10 x 12 inches (24 x 30 cm), portrait; collimate to area of interest.",
                                 "kVp range: 55 to 65.",
-                                "Shielding: Shield radiosensitive tissues outside the region of interest."
                             ],
                             shielding: "Shield radiosensitive tissues outside the region of interest.",
                             patientPosition: "Seat patient at the end of the table with hand and forearm extended.",
@@ -84,14 +83,13 @@
                     {
                         type: "list",
                         items: [
-                            "Adjust model to its Target Model Position: (0.61, -8.88, -7.22)",
-                            "Adjust model to its Target Model Rotation: (0°, 0°, 0°)",
-                            "To confirm, click Verify Placement",
-                            "If verified, click Next to continue the simulation.",
-                            "If verification fails, refine the position and rotation until the criteria are met.",
-
+                            "- Adjust model to its Target Model Position: (0.61, -8.88, -7.22)",
+                            "- Adjust model to its Target Model Rotation: (0°, 0°, 0°)",
+                            "- To confirm, click Verify Placement",
+                            "- If verified, click Next to continue the simulation.",
+                            "- If verification fails, refine the position and rotation until the criteria are met."
                         ]
-                    },
+                    }
                 ],
                 imagePath: '/pics/hand.png' // Add image path here
             },
@@ -130,16 +128,16 @@
                     },
                     {
                         type: "heading",
-                        content: "How to Simulate in 3D Environment?"
+                        content: <strong>How to Simulate in 3D Environment?</strong>
                     },
                     {
                         type: "list",
                         items: [
-                            "Adjust model to its Target Model Position: (1.39, 0.08, -0.42 )",
-                            "Adjust model to its Target Model Rotation: (0°, 0°, -90°)",
-                            "To confirm, click Verify Placement",
-                            "If verified, click Next to continue the simulation.",
-                            "If verification fails, refine the position and rotation until the criteria are met.",
+                            "- Adjust model to its Target Model Position: (1.39, 0.08, -0.42 )",
+                            "- Adjust model to its Target Model Rotation: (0°, 0°, -90°)",
+                            "- To confirm, click Verify Placement",
+                            "- If verified, click Next to continue the simulation.",
+                            "- If verification fails, refine the position and rotation until the criteria are met.",
 
                         ]
                     },
@@ -182,16 +180,16 @@
                     },
                     {
                         type: "heading",
-                        content: "How to Simulate in 3D Environment?"
+                        content: <strong>How to Simulate in 3D Environment?</strong>
                     },
                     {
                         type: "list",
                         items: [
-                            "Adjust model to its Target Model Position: (-3.63, -3.33, 4.66)",
-                            "Adjust model to its Target Model Rotation: (0°, 0°, -180° / 180°)",
-                            "To confirm, click Verify Placement",
-                            "If verified, click Next to continue the simulation.",
-                            "If verification fails, refine the position and rotation until the criteria are met.",
+                            "- Adjust model to its Target Model Position: (-3.63, -3.33, 4.66)",
+                            "- Adjust model to its Target Model Rotation: (0°, 0°, -180° / 180°)",
+                            "- To confirm, click Verify Placement",
+                            "- If verified, click Next to continue the simulation.",
+                            "- If verification fails, refine the position and rotation until the criteria are met.",
 
                         ]
                     },
@@ -235,16 +233,16 @@
                     },
                     {
                         type: "heading",
-                        content: "How to Simulate in 3D Environment?"
+                        content: <strong>How to Simulate in 3D Environment?</strong>
                     },
                     {
                         type: "list",
                         items: [
-                            "Adjust model to its Target Model Position: (0.22, -7.90, 1.26 )",
-                            "Adjust model to its Target Model Rotation: (0°, 0°, 0°)",
-                            "To confirm, click Verify Placement",
-                            "If verified, click Next to continue the simulation.",
-                            "If verification fails, refine the position and rotation until the criteria are met.",
+                            "- Adjust model to its Target Model Position: (0.22, -7.90, 1.26 )",
+                            "- Adjust model to its Target Model Rotation: (0°, 0°, 0°)",
+                            "- To confirm, click Verify Placement",
+                            "- If verified, click Next to continue the simulation.",
+                            "- If verification fails, refine the position and rotation until the criteria are met.",
 
                         ]
                     },
@@ -287,16 +285,16 @@
                     },
                     {
                         type: "heading",
-                        content: "How to Simulate in 3D Environment?"
+                        content: <strong>How to Simulate in 3D Environment?</strong>
                     },
                     {
                         type: "list",
                         items: [
-                            "Adjust model to its Target Model Position: (-8.67, 0.24, 1.59 )",
-                            "Adjust model to its Target Model Rotation: (-180°, 90°, -90°)",
-                            "To confirm, click Verify Placement",
-                            "If verified, click Next to continue the simulation.",
-                            "If verification fails, refine the position and rotation until the criteria are met.",
+                            "- Adjust model to its Target Model Position: (-8.67, 0.24, 1.59 )",
+                            "- Adjust model to its Target Model Rotation: (-180°, 90°, -90°)",
+                            "- To confirm, click Verify Placement",
+                            "- If verified, click Next to continue the simulation.",
+                            "- If verification fails, refine the position and rotation until the criteria are met.",
 
                         ]
                     },
@@ -941,56 +939,56 @@
                 X
             </button>
             <h3>Instructions:</h3>
-            <div className="guide-content">
-                {/* Image */}
-                <div className="guide-image">
-                    <img src={simulationSettings[currentItem]?.imagePath} alt="Guide" />
-                </div>
-                {/* Text */}
-                <div className="guide-text">
-                    {simulationSettings[currentItem]?.guideText.map((section, index) => {
-                        if (section.type === "heading") {
-                            return <h4 key={index}>{section.content}</h4>;
-                        } else if (section.type === "list") {
-                            return (
-                                <ul key={index}>
-                                    {section.items.map((item, idx) => (
-                                        <li key={idx} dangerouslySetInnerHTML={{ __html: item }}></li>
-                                    ))}
-                                </ul>
-                            );
-                        } else if (section.type === "section") {
-                            return (
-                                <div key={index} className="scrollable-section">
-                                    {/* Technical Factors */}
-                                    <h4>Technical Factors:</h4>
-                                    <ul>
-                                        {section.content.technicalFactors.map((item, idx) => (
-                                            <li key={idx}>{item}</li>
-                                        ))}
-                                    </ul>
+<div className="guide-content">
+    {/* Image */}
+    <div className="guide-image">
+        <img src={simulationSettings[currentItem]?.imagePath} alt="Guide" />
+    </div>
+    {/* Text */}
+    <div className="guide-text">
+        {simulationSettings[currentItem]?.guideText.map((section, index) => {
+            if (section.type === "heading") {
+                return <h4 key={index}>{section.content}</h4>;
+            } else if (section.type === "list") {
+                return (
+                    <ul key={index}>
+                        {section.items.map((item, idx) => (
+                            <li key={idx}>{item}</li>
+                        ))}
+                    </ul>
+                );
+            } else if (section.type === "section") {
+                return (
+                    <div key={index} className="scrollable-section">
+                        {/* Technical Factors */}
+                        <h4><strong>Technical Factors:</strong></h4>
+                        <ul>
+                            {section.content.technicalFactors.map((item, idx) => (
+                                <li key={idx}>{item}</li>
+                            ))}
+                        </ul>
 
-                                    {/* Shielding */}
-                                    <h4>Shielding:</h4>
-                                    <p>{section.content.shielding}</p>
+                        {/* Shielding */}
+                        <h4><strong>Shielding:</strong></h4>
+                        <p>{section.content.shielding}</p>
 
-                                    {/* Patient Position */}
-                                    <h4>Patient Position:</h4>
-                                    <p>{section.content.patientPosition}</p>
+                        {/* Patient Position */}
+                        <h4><strong>Patient Position:</strong></h4>
+                        <p>{section.content.patientPosition}</p>
 
-                                    {/* Part Position */}
-                                    <h4>Part Position:</h4>
-                                    <ul>
-                                        {section.content.partPosition.map((item, idx) => (
-                                            <li key={idx}>{item}</li>
-                                        ))}
-                                    </ul>
+                        {/* Part Position */}
+                        <h4><strong>Part Position:</strong></h4>
+                        <ul>
+                            {section.content.partPosition.map((item, idx) => (
+                                <li key={idx}>{item}</li>
+                            ))}
+                        </ul>
 
-                                    {/* CR */}
-                                    <h4>CR:</h4>
-                                    <p>{section.content.cr}</p>
-                                </div>
-                            );
+                        {/* CR */}
+                        <h4><strong>CR:</strong></h4>
+                        <p>{section.content.cr}</p>
+                    </div>
+                );  
                         }
                         return null; // Ignore invalid sections
                     })}

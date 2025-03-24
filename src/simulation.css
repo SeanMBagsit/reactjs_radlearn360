@@ -614,6 +614,20 @@ html {
     overflow-y: auto; /* Enable scrolling for each section */
     margin-bottom: 10px; /* Add spacing between sections */
 }
+.report-button {
+  display: inline-block; /* Makes the button visible */
+  visibility: visible;   /* Ensures it is not hidden */
+  padding: 10px 20px;    /* Optional: Adds some styling */
+  background-color: #007bff; /* Optional: Adds a background color */
+  color: white;          /* Optional: Sets text color */
+  border: none;          /* Optional: Removes border */
+  border-radius: 5px;    /* Optional: Rounds the corners */
+  cursor: pointer;       /* Optional: Changes cursor on hover */
+}
+
+.report-button:hover {
+  background-color: #0056b3; /* Optional: Darkens the button on hover */
+}
 
 /* Media Query for Mobile Devices */
 @media (max-width: 600px) {
@@ -627,4 +641,6 @@ html {
         width: 100%; /* Full width on mobile */
         height: auto;
     }
+    
 }
+
