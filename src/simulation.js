@@ -28,6 +28,13 @@
         const [showResultModal, setShowResultModal] = useState(false);
         const [disableNext, setDisableNext] = useState(false);
         const [timeoutId, setTimeoutId] = useState(null);
+        const [showGuide, setShowGuide] = useState(false); // State to control popup visibility
+        const [simulationStartTime, setSimulationStartTime] = useState(null);
+        const [simulationEndTime, setSimulationEndTime] = useState(null);
+        const [modelPerformanceData, setModelPerformanceData] = useState([]);
+        const [userEmail, setUserEmail] = useState("");
+        
+
 
         const boundaries = {
             minX: -10,
@@ -45,7 +52,48 @@
                 targetRotation: { x: 0, y: 0, z: 0 },
                 threshold: 0.5,
                 scale: { x: 1, y: 1, z: 1 },
-                instructionText: "Properly simulate the PA Hand position"
+                instructionText: "Properly simulate the PA Hand position",
+                guideText: [
+                    {
+                        type: "heading",
+                        content: ""
+                    },
+                    {
+                        type: "section",
+                        content: {
+                            technicalFactors: [
+                                "Minimum SID: 40 inches (100 cm).",
+                                "IR size: 10 x 12 inches (24 x 30 cm), portrait; collimate to area of interest.",
+                                "kVp range: 55 to 65.",
+                                "Shielding: Shield radiosensitive tissues outside the region of interest."
+                            ],
+                            shielding: "Shield radiosensitive tissues outside the region of interest.",
+                            patientPosition: "Seat patient at the end of the table with hand and forearm extended.",
+                            partPosition: [
+                                "Pronate hand with palmar surface in contact with IR; spread fingers slightly.",
+                                "Align the long axis of hand and forearm with the long axis of IR.",
+                                "Center hand and wrist to IR."
+                            ],
+                            cr: "CR perpendicular to IR, directed to third MCP joint."
+                        }
+                    },
+                    {
+                        type: "heading",
+                        content: "How to Simulate in 3D Environment?"
+                    },
+                    {
+                        type: "list",
+                        items: [
+                            "Adjust model to its Target Model Position: (0.61, -8.88, -7.22)",
+                            "Adjust model to its Target Model Rotation: (0°, 0°, 0°)",
+                            "To confirm, click Verify Placement",
+                            "If verified, click Next to continue the simulation.",
+                            "If verification fails, refine the position and rotation until the criteria are met.",
+
+                        ]
+                    },
+                ],
+                imagePath: '/pics/hand.png' // Add image path here
             },
             {
                 ModelFile: '/models/wrist.glb',
@@ -57,7 +105,46 @@
                 },
                 threshold: 0.1,
                 scale: { x: 6, y: 6, z: 6 },
-                instructionText: "Properly simulate the Lateral Wrist position"
+                instructionText: "Properly simulate the Lateral Wrist position",
+                guideText: [
+                    {
+                        type: "heading",
+                        content: ""
+                    },
+                    {
+                        type: "section",
+                        content: {
+                            technicalFactors: [
+                                "Minimum SID: 40 inches (100 cm).",
+                                "IR size: 8 x 10 inches (18 x 24 cm), portrait; smallest IR available and collimate to area of interest",
+                                "kVp range: 60 to 70 ."
+                            ],
+                            shielding: "Shield radiosensitive tissues outside the region of interest.",
+                            patientPosition: "Seat patient at the end of the table, with arm and forearm resting on the table. Place wrist and hand on IR in a thumb-up lateral position. Shoulder, elbow, and wrist should be on the same horizontal plane.",
+                            partPosition: [
+                                "Align and center hand and wrist to the long axis of IR.",
+                                "Adjust hand and wrist into a true lateral position, with fingers comfortably extended; if support is needed to prevent motion, use a radiolucent support block and sandbag, and place the block against extended hand and fingers.",
+                            ],
+                            cr: "CR perpendicular to IR, directed to midcarpal area."
+                        }
+                    },
+                    {
+                        type: "heading",
+                        content: "How to Simulate in 3D Environment?"
+                    },
+                    {
+                        type: "list",
+                        items: [
+                            "Adjust model to its Target Model Position: (1.39, 0.08, -0.42 )",
+                            "Adjust model to its Target Model Rotation: (0°, 0°, -90°)",
+                            "To confirm, click Verify Placement",
+                            "If verified, click Next to continue the simulation.",
+                            "If verification fails, refine the position and rotation until the criteria are met.",
+
+                        ]
+                    },
+                ],
+                imagePath: '/pics/wrist.png' // Add image path here
             },
             
             {
@@ -70,7 +157,46 @@
                 },
                 threshold: 0.2,
                 scale: { x: 4, y: 4, z: 4 },
-                instructionText: "Properly simulate the AP Elbow position"
+                instructionText: "Properly simulate the AP Elbow position",
+                guideText: [
+                    {
+                        type: "heading",
+                        content: ""
+                    },
+                    {
+                        type: "section",
+                        content: {
+                            technicalFactors: [
+                                "Minimum SID: 40 inches (100 cm).",
+                                "IR size: 10 x 12 inches (24 x 30 cm), portrait; smallest IR available and collimate to area of interest",
+                                "kVp range: 65 to 75 ."
+                            ],
+                            shielding: "Shield radiosensitive tissues outside the region of interest.",
+                            patientPosition: "Seat patient at the end of the table, with elbow fully extended, if possible. ",
+                            partPosition: [
+                                "Extend elbow, supinate hand, and align arm and forearm with the long axis of IR.",
+                                "Ask the patient to lean laterally as necessary for true AP projection. Palpate humeral epicondyles to ensure that the interepicondylar plane is parallel to the IR. </",
+                            ],
+                            cr: "CR perpendicular to IR, directed to mid-elbow joint, which is approximately 3/4 inch (2 cm) distal to the midpoint of a line between epicondyles."
+                        }
+                    },
+                    {
+                        type: "heading",
+                        content: "How to Simulate in 3D Environment?"
+                    },
+                    {
+                        type: "list",
+                        items: [
+                            "Adjust model to its Target Model Position: (-3.63, -3.33, 4.66)",
+                            "Adjust model to its Target Model Rotation: (0°, 0°, -180° / 180°)",
+                            "To confirm, click Verify Placement",
+                            "If verified, click Next to continue the simulation.",
+                            "If verification fails, refine the position and rotation until the criteria are met.",
+
+                        ]
+                    },
+                ],
+                imagePath: '/pics/elbow.png' // Add image path here
             },
             {
                 ModelFile: '/models/foot.glb',
@@ -82,7 +208,48 @@
                 },
                 threshold: 0.3,
                 scale: { x: 1.2, y: 1.2, z: 1.2 },
-                instructionText: "Properly simulate the AP Foot position"
+                instructionText: "Properly simulate the AP Foot position",
+                guideText: [
+                    {
+                        type: "heading",
+                        content: ""
+                    },
+                    {
+                        type: "section",
+                        content: {
+                            technicalFactors: [
+                                "Minimum SID: 40 inches (100 cm).",
+                                "IR size:10 x 12 inches (24 x 30 cm), portrait",
+                                "kVp range: 55 to 65 ."
+                            ],
+                            shielding: "Shield radiosensitive tissues outside the region of interest.",
+                            patientPosition: "Place patient supine; provide a pillow for the patient’s head; flex knee and place plantar surface (sole) of affected foot flat on IR",
+                            partPosition: [
+                                "Extend (plantar flex) foot but maintain plantar surface resting flat and firmly on IR.",
+                                "Align and center long axis of foot to CR and to the long axis of the portion of IR being exposed.",
+                                "Use sandbags if necessary to prevent IR from slipping on the tabletop.",
+                                "If immobilization is needed, flex opposite knee and rest against affected knee for support.",
+                            ],
+                            cr: "Angle CR 10° posteriorly (toward heel) with CR perpendicular to metatarsals."
+                        }
+                    },
+                    {
+                        type: "heading",
+                        content: "How to Simulate in 3D Environment?"
+                    },
+                    {
+                        type: "list",
+                        items: [
+                            "Adjust model to its Target Model Position: (0.22, -7.90, 1.26 )",
+                            "Adjust model to its Target Model Rotation: (0°, 0°, 0°)",
+                            "To confirm, click Verify Placement",
+                            "If verified, click Next to continue the simulation.",
+                            "If verification fails, refine the position and rotation until the criteria are met.",
+
+                        ]
+                    },
+                ],
+                imagePath: '/pics/foot.png' // Add image path here
             },
             {
                 
@@ -95,9 +262,53 @@
                 },
                 threshold: 0.3,
                 scale: { x: 1, y: 1, z: 1 },
-                instructionText: "Properly simulate the Lateral Ankle position"
+                instructionText: "Properly simulate the Lateral Ankle position",
+                guideText: [
+                    {
+                        type: "heading",
+                        content: ""
+                    },
+                    {
+                        type: "section",
+                        content: {
+                            technicalFactors: [
+                                "Minimum SID: 40 inches (100 cm).",
+                                "IR size: 10 x 12 inches (24 x 30 cm), portrait. ",
+                                "kVp range: 60 to 75."
+                            ],
+                            shielding: "Shield radiosensitive tissues outside the region of interest.",
+                            patientPosition: "Place the patient in the lateral recumbent position, affected side down; provide a pillow for the patient’s head; flex the knee of the affected limb approximately 45°. Place the opposite leg behind the injured limb to prevent over-rotation.",
+                            partPosition: [
+                                "Center and align the ankle joint to the CR and the long axis of the portion of the IR being exposed.",
+                                "Place support under the knee as needed to place the leg and foot in a true lateral position.",
+                            ],
+                            cr: "CR perpendicular to IR, directed to the medial malleolus."
+                        }
+                    },
+                    {
+                        type: "heading",
+                        content: "How to Simulate in 3D Environment?"
+                    },
+                    {
+                        type: "list",
+                        items: [
+                            "Adjust model to its Target Model Position: (-8.67, 0.24, 1.59 )",
+                            "Adjust model to its Target Model Rotation: (-180°, 90°, -90°)",
+                            "To confirm, click Verify Placement",
+                            "If verified, click Next to continue the simulation.",
+                            "If verification fails, refine the position and rotation until the criteria are met.",
+
+                        ]
+                    },
+                ],
+                imagePath: '/pics/ankle.png' // Add image path here
             }
         ];
+
+        const toggleGuide = () => {
+            setShowGuide((prev) => !prev);
+        };
+        
         
         const updateInstructionText = (modelIndex) => {
             // Only update the instruction text if the timer has not run out
@@ -107,13 +318,13 @@
             }
           };
 
-        const enterSimulation = () => {
+          const enterSimulation = () => {
             const confirmation = window.confirm('Are you ready to begin the simulation?');
             if (confirmation) {
                 setShowIntro(false);
                 setShowModel(true);
                 setShowLabConfirmation(true);
-
+        
                 setCurrentItem(0);
                 setTimer(simulationSettings[0].timeLimit || 60);
                 setHandPosition({ x: 0, y: 0, z: 0 });
@@ -122,7 +333,16 @@
                 setFeedbackMessage('');
                 setFeedbackColor('red');
                 setDisableControls(true);
-
+                
+                // Record simulation start time
+                setSimulationStartTime(new Date());
+                // Reset model performance data
+                setModelPerformanceData([]);
+                // Get user email if authenticated
+                if (auth.currentUser) {
+                    setUserEmail(auth.currentUser.email || "Unknown");
+                }
+        
                 setShowLabConfirmation(true);
             }
         };
@@ -143,6 +363,41 @@
                 setShowModel(false);
                 setDisableControls(true);
             }
+        };
+
+        const generateDetailedReport = () => {
+            // Format dates
+            const formatDate = (date) => {
+                if (!date) return "Unknown";
+                return date.toLocaleString();
+            };
+            
+            // Create report content
+            let reportContent = `Email: ${userEmail}\n`;
+            reportContent += `Time started: ${formatDate(simulationStartTime)}\n`;
+            reportContent += `Time finished: ${formatDate(simulationEndTime)}\n\n`;
+            
+            // Add performance data for each model
+            modelPerformanceData.forEach(data => {
+                reportContent += `Model name: ${data.modelName}\n`;
+                reportContent += `Target Position: (${data.targetPosition.x.toFixed(2)}, ${data.targetPosition.y.toFixed(2)}, ${data.targetPosition.z.toFixed(2)})\n`;
+                reportContent += `Target Rotation: (${data.targetRotation.x.toFixed(2)}°, ${data.targetRotation.y.toFixed(2)}°, ${data.targetRotation.z.toFixed(2)}°)\n`;
+                reportContent += `Your Position: (${data.userPosition.x.toFixed(2)}, ${data.userPosition.y.toFixed(2)}, ${data.userPosition.z.toFixed(2)})\n`;
+                reportContent += `Your Rotation: (${data.userRotation.x.toFixed(2)}°, ${data.userRotation.y.toFixed(2)}°, ${data.userRotation.z.toFixed(2)}°)\n`;
+                reportContent += `Result: ${data.result}\n`;
+                reportContent += `Amount of time to complete: ${data.timeToComplete} seconds\n\n`;
+            });
+            
+            // Create blob and download
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `simulation_report_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         };
 
         useEffect(() => {
@@ -344,6 +599,35 @@
               setFeedbackColor('green');
               setPassedCurrentItem(true);
               setDisableControls(true);
+              
+              // Calculate time to complete this model
+              const timeToComplete = 60 - timer;
+              
+              // Record performance data
+              const modelName = getModelName(currentItem);
+              
+              setModelPerformanceData(prev => [...prev, {
+                modelName,
+                targetPosition,
+                targetRotation: {
+                  x: targetRotation.x * (180 / Math.PI),
+                  y: targetRotation.y * (180 / Math.PI),
+                  z: targetRotation.z * (180 / Math.PI)
+                },
+                userPosition: {
+                  x: Model.position.x,
+                  y: Model.position.y,
+                  z: Model.position.z
+                },
+                userRotation: {
+                  x: Model.rotation.x * (180 / Math.PI),
+                  y: Model.rotation.y * (180 / Math.PI),
+                  z: Model.rotation.z * (180 / Math.PI)
+                },
+                result: "Pass",
+                timeToComplete
+              }]);
+              
               setTimer(0);
               setPassedCount((prevCount) => prevCount + 1);
             } else {
@@ -358,7 +642,18 @@
                 setTimeoutId(id); // Store the timeout ID
               }
             }
-          };
+        };
+
+        const getModelName = (index) => {
+            const modelNames = [
+                "PA Hand",
+                "Lateral Wrist",
+                "AP Elbow",
+                "AP Foot",
+                "Lateral Ankle"
+            ];
+            return modelNames[index] || `Model ${index + 1}`;
+        };
         
 
           useEffect(() => {
@@ -405,6 +700,32 @@
           const handleEndSimulation = () => {
             const totalItems = simulationSettings.length;
             const rawScore = passedCount;
+            
+            // Record simulation end time
+            setSimulationEndTime(new Date());
+            
+            // Save any remaining model data for failed attempts
+            for (let i = 0; i < totalItems; i++) {
+                // Check if this model already has performance data
+                if (!modelPerformanceData.some(data => data.modelName === getModelName(i))) {
+                    // If no data exists, it means the user failed or skipped this model
+                    const { targetPosition, targetRotation } = simulationSettings[i];
+                    setModelPerformanceData(prev => [...prev, {
+                        modelName: getModelName(i),
+                        targetPosition,
+                        targetRotation: {
+                            x: targetRotation.x * (180 / Math.PI),
+                            y: targetRotation.y * (180 / Math.PI),
+                            z: targetRotation.z * (180 / Math.PI)
+                        },
+                        userPosition: { x: 0, y: 0, z: 0 }, // Default values for failed attempts
+                        userRotation: { x: 0, y: 0, z: 0 },
+                        result: "Fail",
+                        timeToComplete: 60 // Max time
+                    }]);
+                }
+            }
+            
             setShowResultModal(true);
             setFinalScore({ correct: rawScore, total: totalItems });
             setShowModel(true);
@@ -419,14 +740,16 @@
         
             const user = auth.currentUser;
             
-        
             if (user) {
                 // Save the score to Firestore
                 const userDocRef = doc(db, "users", user.uid); // Reference to the user's document
                 const scoreData = {
                     score: rawScore,
                     total: totalItems,
-                    timestamp: new Date()
+                    timestamp: new Date(),
+                    performanceData: modelPerformanceData,
+                    startTime: simulationStartTime,
+                    endTime: new Date()
                 };
         
                 // Update or create a 'scores' subcollection for the user
@@ -494,44 +817,52 @@
 
         return (
             <div className='container'>
+                {/* Result Modal */}
                 {showResultModal && (
-                    <div className="modal-overlay">
-                        <div className="modal">
-                            <h2>Simulation Complete!</h2>
-                            <p>
-                                Thank you for completing the simulation! 🎉 Here are your results:
-                            </p>
-                            <p className="score-text">
-                                Correct: {finalScore?.correct}/{finalScore?.total}
-                            </p>
-                            <p className="final-score">
-                                Final Score: {finalScore?.correct} points
-                            </p>
-                            <p className="success-message">
-                                ✅ Your score has been recorded successfully!
-                            </p>
-                            <div className="modal-buttons">
-                                <button
-                                    onClick={() => {
-                                        setShowResultModal(false);
-                                        setShowIntro(true);
-                                        setShowModel(false);
-                                        setCurrentItem(0);
-                                        setHandPosition({ x: 0, y: 0, z: 0 });
-                                        setHandRotation({ x: 0, y: 0, z: 0 });
-                                        setFeedbackMessage('');
-                                        setDisableControls(false);
-                                        setPassedCount(0);
-                                    }}
-                                    className="modal-button ok-button"
-                                >
-                                    OK
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
+    <div className="modal-overlay">
+        <div className="modal">
+            <h2>Simulation Complete!</h2>
+            <p>
+                Thank you for completing the simulation! 🎉 Here are your results:
+            </p>
+            <p className="score-text">
+                Correct: {finalScore?.correct}/{finalScore?.total}
+            </p>
+            <p className="final-score">
+                Final Score: {finalScore?.correct} points
+            </p>
+            <p className="success-message">
+                ✅ Your score has been recorded successfully!
+            </p>
+            <div className="modal-buttons">
+                <button
+                    onClick={generateDetailedReport}
+                    className="report-button"
+                >
+                    View Detailed Report
+                </button>
+                <button
+                    onClick={() => {
+                        setShowResultModal(false);
+                        setShowIntro(true);
+                        setShowModel(false);
+                        setCurrentItem(0);
+                        setHandPosition({ x: 0, y: 0, z: 0 });
+                        setHandRotation({ x: 0, y: 0, z: 0 });
+                        setFeedbackMessage('');
+                        setDisableControls(false);
+                        setPassedCount(0);
+                    }}
+                    className="modal-button ok-button"
+                >
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+)}
+    
+                {/* Lab Confirmation Modal */}
                 {showLabConfirmation && (
                     <div className="modal-overlay">
                         <div className="modal">
@@ -558,7 +889,8 @@
                         </div>
                     </div>
                 )}
-
+    
+                {/* Intro Screen */}
                 {showIntro && (
                     <div className="intro-container">
                         <button
@@ -569,16 +901,19 @@
                         </button>
                     </div>
                 )}
-
+    
+                {/* Main Simulation View */}
                 {showModel && (
                     <div className="model-viewer-container">
+                        {/* Exit Button */}
                         <button
                             onClick={handleExitSimulation}
                             className="exit-button"
                         >
                             X
                         </button>
-
+    
+                        {/* Progress Bar */}
                         <div className="progress-container">
                             <div
                                 className="progress-bar"
@@ -590,13 +925,90 @@
                                 {`${currentItem + 1}/${simulationSettings.length}`}
                             </div>
                         </div>
+    
+                        {/* Red Book Icon */}
+                        <div className="book-icon" onClick={toggleGuide}>
+                            📖
+                        </div>
+    
+                        {/* Popup Guide */}
+{showGuide && (
+    <div className="popup-guide-overlay">
+        <div className="popup-guide">
+            <button
+                className="close-guide-button"
+                onClick={toggleGuide}
+            >
+                X
+            </button>
+            <h3>Instructions:</h3>
+            <div className="guide-content">
+                {/* Image */}
+                <div className="guide-image">
+                    <img src={simulationSettings[currentItem]?.imagePath} alt="Guide" />
+                </div>
+                {/* Text */}
+                <div className="guide-text">
+                    {simulationSettings[currentItem]?.guideText.map((section, index) => {
+                        if (section.type === "heading") {
+                            return <h4 key={index}>{section.content}</h4>;
+                        } else if (section.type === "list") {
+                            return (
+                                <ul key={index}>
+                                    {section.items.map((item, idx) => (
+                                        <li key={idx} dangerouslySetInnerHTML={{ __html: item }}></li>
+                                    ))}
+                                </ul>
+                            );
+                        } else if (section.type === "section") {
+                            return (
+                                <div key={index} className="scrollable-section">
+                                    {/* Technical Factors */}
+                                    <h4>Technical Factors:</h4>
+                                    <ul>
+                                        {section.content.technicalFactors.map((item, idx) => (
+                                            <li key={idx}>{item}</li>
+                                        ))}
+                                    </ul>
 
+                                    {/* Shielding */}
+                                    <h4>Shielding:</h4>
+                                    <p>{section.content.shielding}</p>
+
+                                    {/* Patient Position */}
+                                    <h4>Patient Position:</h4>
+                                    <p>{section.content.patientPosition}</p>
+
+                                    {/* Part Position */}
+                                    <h4>Part Position:</h4>
+                                    <ul>
+                                        {section.content.partPosition.map((item, idx) => (
+                                            <li key={idx}>{item}</li>
+                                        ))}
+                                    </ul>
+
+                                    {/* CR */}
+                                    <h4>CR:</h4>
+                                    <p>{section.content.cr}</p>
+                                </div>
+                            );
+                        }
+                        return null; // Ignore invalid sections
+                    })}
+                </div>
+            </div>
+        </div>
+    </div>
+)}
+    
+                        {/* Model Viewer */}
                         <div
                             id="model-viewer"
                             ref={modelViewerRef}
                             className="model-viewer"
                         ></div>
-
+    
+                        {/* Verify Placement Button */}
                         <button
                             onClick={handleVerifyPlacement}
                             className="verify-button"
@@ -604,7 +1016,8 @@
                         >
                             Verify Placement
                         </button>
-
+    
+                        {/* Next Button */}
                         {passedCurrentItem && currentItem < simulationSettings.length - 1 && (
                             <button
                                 onClick={handleNextItem}
@@ -613,7 +1026,8 @@
                                 Next
                             </button>
                         )}
-
+    
+                        {/* Feedback Message */}
                         {feedbackMessage && (
                             <div 
                                 className="feedback-message"
@@ -622,12 +1036,14 @@
                                 {feedbackMessage}
                             </div>
                         )}
-
+    
+                        {/* Model Info */}
                         <div className="model-info">
                             <div>Model Position: ({handPosition.x.toFixed(2)}, {handPosition.y.toFixed(2)}, {handPosition.z.toFixed(2)})</div>
                             <div>Model Rotation: ({(handRotation.x * 180 / Math.PI).toFixed(2)}°, {(handRotation.y * 180 / Math.PI).toFixed(2)}°, {(handRotation.z * 180 / Math.PI).toFixed(2)}°)</div>
                         </div>
-
+    
+                        {/* Rotation Controls */}
                         <div className="rotation-controls">
                             <div className="rotation-control">
                                 <div>X Rotation</div>
@@ -641,7 +1057,6 @@
                                     disabled={disableControls}
                                 />
                             </div>
-
                             <div className="rotation-control">
                                 <div>Y Rotation</div>
                                 <input
@@ -654,7 +1069,6 @@
                                     disabled={disableControls}
                                 />
                             </div>
-
                             <div className="rotation-control">
                                 <div>Z Rotation</div>
                                 <input
@@ -668,7 +1082,8 @@
                                 />
                             </div>
                         </div>
-
+    
+                        {/* Timer */}
                         <div className="timer">
                             <p>Time Remaining: {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, '0')}</p>
                         </div>

@@ -537,3 +537,94 @@ html {
 .verify-button, .rotation-controls, .model-info, .timer {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
+
+/* Red book icon */
+.book-icon {
+    position: fixed;
+    top: 300px;
+    right: 50px;
+    font-size: 2rem;
+    color: red;
+    cursor: pointer;
+}
+
+/* Popup guide overlay */
+.popup-guide-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Popup guide container */
+.popup-guide {
+    background: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    width: 800px; /* Increased width to accommodate image and text */
+    max-width: 90%;
+    position: relative;
+    max-height: 80vh; /* Limit height to 80% of viewport height */
+    overflow-y: auto; /* Enable scrolling for the entire popup */
+}
+
+/* Close button */
+.close-guide-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: black;
+}
+
+/* Guide content container */
+.guide-content {
+    display: flex;
+    gap: 20px; /* Space between image and text */
+    align-items: flex-start; /* Align items at the top */
+}
+
+/* Guide image */
+.guide-image img {
+    width: 200px; /* Fixed width for the image */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px;
+}
+
+/* Guide text */
+.guide-text {
+    flex: 1; /* Take up remaining space */
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Scrollable Section */
+.scrollable-section {
+    max-height: 200px; /* Adjust height as needed */
+    overflow-y: auto; /* Enable scrolling for each section */
+    margin-bottom: 10px; /* Add spacing between sections */
+}
+
+/* Media Query for Mobile Devices */
+@media (max-width: 600px) {
+    .guide-content {
+        display: flex;
+        flex-direction: column; /* Stack image and text vertically */
+        gap: 20px; /* Space between image and text */
+    }
+
+    .guide-image img {
+        width: 100%; /* Full width on mobile */
+        height: auto;
+    }
+}
