@@ -63,7 +63,7 @@ const SignUp = () => {
       
       // Step 2: Update the user's profile (e.g., displayName)
       await updateProfile(user, {
-        displayName: formData.username,
+        displayName: `${formData.firstName} ${formData.lastName}`,
       });
       console.log("User profile updated successfully"); // Debugging log
 

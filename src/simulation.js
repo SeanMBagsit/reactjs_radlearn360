@@ -79,7 +79,7 @@
                     },
                     {
                         type: "heading",
-                        content: "How to Simulate in 3D Environment?"
+                        content: <strong>How to Simulate in 3D Environment?</strong>
                     },
                     {
                         type: "list",
@@ -563,84 +563,79 @@
           const handleVerifyPlacement = () => {
             // Exit early if controls are disabled or the timer has expired
             if (disableControls || timer <= 0) {
-              // Check if it's the last model
-              if (currentItem === simulationSettings.length - 1) {
-                setFeedbackMessage('Time is up!');
-              } else {
-                setFeedbackMessage('Time is up! Proceed to the next model.');
-              }
-              setFeedbackColor('red');
-              return; // Stop further execution
+                // Check if it's the last model
+                if (currentItem === simulationSettings.length - 1) {
+                    setFeedbackMessage('Time is up!');
+                } else {
+                    setFeedbackMessage('Time is up! Proceed to the next model.');
+                }
+                setFeedbackColor('red');
+                return; // Stop further execution
             }
-          
+        
             // Existing logic for verifying placement
             const { targetPosition, targetRotation, threshold, ModelFile } = simulationSettings[currentItem];
             const distance = Math.sqrt(
-              Math.pow(handPosition.x - targetPosition.x, 2) +
-              Math.pow(handPosition.y - targetPosition.y, 2) +
-              Math.pow(handPosition.z - targetPosition.z, 2)
+                Math.pow(handPosition.x - targetPosition.x, 2) +
+                Math.pow(handPosition.y - targetPosition.y, 2) +
+                Math.pow(handPosition.z - targetPosition.z, 2)
             );
-          
+        
             let isRotationValid =
-              Math.abs(Model.rotation.x - targetRotation.x) < 0.01 &&
-              Math.abs(Model.rotation.y - targetRotation.y) < 0.01;
-          
+                Math.abs(Model.rotation.x - targetRotation.x) < 0.01 &&
+                Math.abs(Model.rotation.y - targetRotation.y) < 0.01;
+        
             if (ModelFile === '/models/elbow.glb') {
-              const zRotation = Model.rotation.z;
-              isRotationValid =
-                isRotationValid &&
-                (Math.abs(zRotation - (-Math.PI)) < 0.01 || Math.abs(zRotation - Math.PI) < 0.01);
+                const zRotation = Model.rotation.z;
+                isRotationValid =
+                    isRotationValid &&
+                    (Math.abs(zRotation - (-Math.PI)) < 0.01 || Math.abs(zRotation - Math.PI) < 0.01);
             } else {
-              isRotationValid = isRotationValid && Math.abs(Model.rotation.z - targetRotation.z) < 0.01;
+                isRotationValid = isRotationValid && Math.abs(Model.rotation.z - targetRotation.z) < 0.01;
             }
-          
+        
             if (distance <= threshold && isRotationValid) {
-              setFeedbackMessage('You passed!');
-              setFeedbackColor('green');
-              setPassedCurrentItem(true);
-              setDisableControls(true);
-              
-              // Calculate time to complete this model
-              const timeToComplete = 60 - timer;
-              
-              // Record performance data
-              const modelName = getModelName(currentItem);
-              
-              setModelPerformanceData(prev => [...prev, {
-                modelName,
-                targetPosition,
-                targetRotation: {
-                  x: targetRotation.x * (180 / Math.PI),
-                  y: targetRotation.y * (180 / Math.PI),
-                  z: targetRotation.z * (180 / Math.PI)
-                },
-                userPosition: {
-                  x: Model.position.x,
-                  y: Model.position.y,
-                  z: Model.position.z
-                },
-                userRotation: {
-                  x: Model.rotation.x * (180 / Math.PI),
-                  y: Model.rotation.y * (180 / Math.PI),
-                  z: Model.rotation.z * (180 / Math.PI)
-                },
-                result: "Pass",
-                timeToComplete
-              }]);
-              
-              setTimer(0);
-              setPassedCount((prevCount) => prevCount + 1);
+                setFeedbackMessage('You passed!');
+                setFeedbackColor('green');
+                setPassedCurrentItem(true);
+                setDisableControls(true);
+        
+                // Calculate time to complete this model
+                const timeToComplete = 60 - timer;
+        
+                // Record performance data with actual position and rotation
+                const modelName = getModelName(currentItem);
+                setModelPerformanceData(prev => [...prev, {
+                    modelName,
+                    targetPosition,
+                    targetRotation: {
+                        x: targetRotation.x * (180 / Math.PI),
+                        y: targetRotation.y * (180 / Math.PI),
+                        z: targetRotation.z * (180 / Math.PI)
+                    },
+                    userPosition: handPosition, // Use handPosition here
+                    userRotation: {
+                        x: Model.rotation.x * (180 / Math.PI), // Capture actual rotation
+                        y: Model.rotation.y * (180 / Math.PI),
+                        z: Model.rotation.z * (180 / Math.PI)
+                    },
+                    result: "Pass",
+                    timeToComplete
+                }]);
+        
+                setTimer(0);
+                setPassedCount((prevCount) => prevCount + 1);
             } else {
-              setFeedbackMessage('Wrong positioning technique!');
-              setFeedbackColor('red');
-          
-              // Only update instruction text if the timer has not run out
-              if (timer > 0) {
-                const id = setTimeout(() => {
-                  updateInstructionText(currentItem);
-                }, 2000);
-                setTimeoutId(id); // Store the timeout ID
-              }
+                setFeedbackMessage('Wrong positioning technique!');
+                setFeedbackColor('red');
+        
+                // Only update instruction text if the timer has not run out
+                if (timer > 0) {
+                    const id = setTimeout(() => {
+                        updateInstructionText(currentItem);
+                    }, 2000);
+                    setTimeoutId(id); // Store the timeout ID
+                }
             }
         };
 
@@ -718,8 +713,12 @@
                             y: targetRotation.y * (180 / Math.PI),
                             z: targetRotation.z * (180 / Math.PI)
                         },
-                        userPosition: { x: 0, y: 0, z: 0 }, // Default values for failed attempts
-                        userRotation: { x: 0, y: 0, z: 0 },
+                        userPosition: handPosition, // Use handPosition here
+                        userRotation: {
+                            x: Model.rotation.x * (180 / Math.PI),
+                            y: Model.rotation.y * (180 / Math.PI),
+                            z: Model.rotation.z * (180 / Math.PI)
+                        },
                         result: "Fail",
                         timeToComplete: 60 // Max time
                     }]);

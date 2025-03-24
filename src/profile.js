@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "./firebaseConfig";
-import { signOut, updateEmail, updateProfile } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
+import { signOut, updateProfile } from "firebase/auth";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig"; // Import centralized db
 import "./profile.css";
 
@@ -18,14 +18,22 @@ const Profile = () => {
 
   useEffect(() => {
     // Listen for changes in the authentication state
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         setUser(currentUser); // Set the current user
-        setFormData({
-          firstName: currentUser.displayName?.split(" ")[0] || "",
-          lastName: currentUser.displayName?.split(" ")[1] || "",
-          email: currentUser.email || "",
-        });
+
+        // Fetch user data from Firestore
+        const userDocRef = doc(db, "users", currentUser.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          setFormData({
+            firstName: userData.firstName || "",
+            lastName: userData.lastName || "", // Fetch lastName
+            email: currentUser.email || "",
+          });
+        }
       } else {
         setUser(null); // No user is signed in
       }
@@ -59,7 +67,7 @@ const Profile = () => {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
       await updateDoc(userDocRef, {
         firstName,
-        lastName,
+        lastName, // Save lastName
       });
 
       setSuccess("Profile updated successfully!");
