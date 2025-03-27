@@ -939,60 +939,105 @@
                 X
             </button>
             <h3>Instructions:</h3>
-<div className="guide-content">
+    <div className="guide-content">
     {/* Image */}
-    <div className="guide-image">
-        <img src={simulationSettings[currentItem]?.imagePath} alt="Guide" />
-    </div>
+        <div className="guide-image">
+            <img src={simulationSettings[currentItem]?.imagePath} alt="Guide" />
+        </div>
     {/* Text */}
     <div className="guide-text">
-        {simulationSettings[currentItem]?.guideText.map((section, index) => {
-            if (section.type === "heading") {
-                return <h4 key={index}>{section.content}</h4>;
-            } else if (section.type === "list") {
-                return (
-                    <ul key={index}>
-                        {section.items.map((item, idx) => (
-                            <li key={idx}>{item}</li>
-                        ))}
-                    </ul>
-                );
-            } else if (section.type === "section") {
-                return (
-                    <div key={index} className="scrollable-section">
-                        {/* Technical Factors */}
-                        <h4><strong>Technical Factors:</strong></h4>
-                        <ul>
-                            {section.content.technicalFactors.map((item, idx) => (
-                                <li key={idx}>{item}</li>
-                            ))}
-                        </ul>
+    {simulationSettings[currentItem]?.guideText.map((section, index) => {
+        if (section.type === "heading") {
+            return <h4 key={index}>{section.content}</h4>;
+        } else if (section.type === "list") {
+            return (
+                <ul key={index}>
+                    {section.items.map((item, idx) => {
+                        // Highlight coordinates (e.g., (0.61, -8.88, -7.22))
+                        let styledItem = item;
 
-                        {/* Shielding */}
-                        <h4><strong>Shielding:</strong></h4>
-                        <p>{section.content.shielding}</p>
-
-                        {/* Patient Position */}
-                        <h4><strong>Patient Position:</strong></h4>
-                        <p>{section.content.patientPosition}</p>
-
-                        {/* Part Position */}
-                        <h4><strong>Part Position:</strong></h4>
-                        <ul>
-                            {section.content.partPosition.map((item, idx) => (
-                                <li key={idx}>{item}</li>
-                            ))}
-                        </ul>
-
-                        {/* CR */}
-                        <h4><strong>CR:</strong></h4>
-                        <p>{section.content.cr}</p>
-                    </div>
-                );  
+                        // Match coordinates enclosed in parentheses
+                        const coordinateMatch = item.match(/\(.*?\)/);
+                        if (coordinateMatch) {
+                            const coordinate = coordinateMatch[0]; // Extract the matched coordinate
+                            styledItem = styledItem.replace(
+                                coordinate,
+                                `<span style="color: green;">${coordinate}</span>`
+                            );
                         }
-                        return null; // Ignore invalid sections
+
+                        // Highlight specific phrases like "Verify Placement" and "Next"
+                        styledItem = styledItem.replace(
+                            /\b(Verify Placement|Next)\b/g,
+                            (match) => `<span style="color: green;">${match}</span>`
+                        );
+
+                        styledItem = styledItem.replace(
+                            /\b(verification fails)\b/gi,
+                            (match) => `<span style="color: red;">${match}</span>`
+                        );
+
+                        return (
+                            <li key={idx} dangerouslySetInnerHTML={{ __html: styledItem }} />
+                        );
                     })}
+                </ul>
+            );
+        } else if (section.type === "section") {
+            return (
+                <div key={index} className="scrollable-section">
+                    {/* Technical Factors */}
+                    <h4><strong>Technical Factors:</strong></h4>
+                    <ul>
+                        {section.content.technicalFactors.map((item, idx) => {
+                            // Highlight specific phrases in technical factors
+                            const highlightedItem = item.replace(
+                                /\b(Minimum SID|IR size|kVp range)\b/g,
+                                (match) => `<span style="color: black;">${match}</span>`
+                            );
+                            return (
+                                <li key={idx} dangerouslySetInnerHTML={{ __html: highlightedItem }} />
+                            );
+                        })}
+                    </ul>
+
+                    {/* Shielding */}
+                    <h4><strong>Shielding:</strong></h4>
+                    <p>{section.content.shielding}</p>
+
+                    {/* Patient Position */}
+                    <h4><strong>Patient Position:</strong></h4>
+                    <p>{section.content.patientPosition}</p>
+
+                    {/* Part Position */}
+                    <h4><strong>Part Position:</strong></h4>
+                    <ul>
+                        {section.content.partPosition.map((item, idx) => {
+                            // Highlight coordinates in part position
+                            const match = item.match(/\(.*?\)/);
+                            if (match) {
+                                const coordinate = match[0];
+                                const beforeCoordinate = item.split(coordinate)[0];
+                                return (
+                                    <li key={idx}>
+                                        {beforeCoordinate}
+                                        <span style={{ color: "green" }}>{coordinate}</span>
+                                    </li>
+                                );
+                            }
+                            return <li key={idx}>{item}</li>; // If no coordinates, return the item as is
+                        })}
+                    </ul>
+
+                    {/* CR */}
+                    <h4><strong>CR:</strong></h4>
+                    <p>{section.content.cr}</p>
                 </div>
+            );
+        }
+        return null; // Ignore invalid sections
+    })}
+</div>
             </div>
         </div>
     </div>
