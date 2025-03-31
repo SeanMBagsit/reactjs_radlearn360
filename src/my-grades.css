@@ -1,0 +1,78 @@
+/* Loader Styles */
+.mg-loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f9f9f9;
+}
+
+.mg-loading-text {
+  font-size: 16px;
+  color: #333;
+}
+
+/* Main Container */
+.mg-grades-container {
+  padding: 20px;
+  max-width: 800px;
+  width: 100%; /* Ensure responsiveness */
+  margin: 10vh auto 0; /* Add top margin as a percentage of viewport height */
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.mg-title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.mg-user-email {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Grade Card */
+.mg-grade-card {
+  margin-top: 20px;
+}
+
+.mg-no-simulations {
+  text-align: center;
+  font-size: 16px;
+  color: #888;
+}
+
+/* Simulation Table */
+.mg-simulation-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mg-simulation-table th,
+.mg-simulation-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.mg-simulation-table th {
+  background-color: #f9f9f9;
+  font-weight: bold;
+  color: #333;
+}
+
+.mg-simulation-row:hover {
+  background-color: #f0f0f0;
+}
+
+.mg-simulation-row {
+  color: black;
+}

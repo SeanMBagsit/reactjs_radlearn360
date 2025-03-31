@@ -13,15 +13,17 @@ import Simulation from "./simulation";
 import SignUp from "./signup";
 import Homepage from "./homepage";
 import Landing from "./landing";
-import Profile from "./profile"; 
-import { auth } from "./firebaseConfig"; // Import Firebase auth
+import Profile from "./profile";
+import MyGrades from "./my-grades"; // Import new component
+import DetailedReports from "./view-detailed-reports"; // Import new component
+import { auth } from "./firebaseConfig";
 
 const App = () => {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState(null); // State to track authenticated user
+  const [user, setUser] = useState(null);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false); // State for dropdown
 
-  // Check if current path is study-related
   const isStudyRoute = () => {
     const studyPaths = [
       "/study",
@@ -36,36 +38,56 @@ const App = () => {
     return studyPaths.some((path) => location.pathname === path);
   };
 
-  // Toggle menu function
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  // Close menu when a link is clicked
   const closeMenu = () => {
     setMenuOpen(false);
   };
 
-  // Listen for authentication state changes
+  // Function to close the profile dropdown
+  const closeProfileDropdown = () => {
+    setProfileDropdownOpen(false);
+  };
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       if (currentUser) {
-        setUser(currentUser); // Set user if signed in
+        setUser(currentUser);
       } else {
-        setUser(null); // Clear user if signed out
+        setUser(null);
       }
     });
-    return () => unsubscribe(); // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
-  
-  // Fix: Restore scrolling when switching pages
+
   useEffect(() => {
     if (location.pathname === "/") {
-      document.body.style.overflow = "auto"; // Always enable scrolling on homepage
+      document.body.style.overflow = "auto";
     } else if (location.pathname === "/simulation") {
-      document.body.style.overflow = "hidden"; // Hide scrolling in simulation
+      document.body.style.overflow = "hidden";
     }
   }, [location.pathname]);
+
+  // Add event listener to close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const profileDropdown = document.querySelector(".profile-dropdown");
+      if (
+        profileDropdown &&
+        !profileDropdown.contains(event.target) &&
+        profileDropdownOpen
+      ) {
+        closeProfileDropdown();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [profileDropdownOpen]);
 
   return (
     <div>
@@ -106,13 +128,60 @@ const App = () => {
           </NavLink>
           {/* Dynamically update navigation based on authentication state */}
           {user ? (
-            <NavLink
-              to="/profile"
-              className={({ isActive }) => (isActive ? "active" : "")}
-              onClick={closeMenu}
+            <div
+              className="profile-dropdown"
+              style={{ display: "flex", justifyContent: "center" }}
             >
-              Profile
-            </NavLink>
+              <div
+                className="profile-name"
+                onClick={() =>
+                  setProfileDropdownOpen(!profileDropdownOpen)
+                } // Toggle dropdown on click
+              >
+                PROFILE {profileDropdownOpen ? "+" : "-"}
+              </div>
+              {profileDropdownOpen && (
+                <div
+                  className="profile-menu"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    right: 0,
+                    backgroundColor: "#ffffff",
+                    padding: "10px",
+                    boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
+                    borderRadius: "5px",
+                    zIndex: 1000,
+                  }}
+                >
+                  <NavLink
+                    to="/profile"
+                    className={({ isActive }) => (isActive ? "active" : "")}
+                    onClick={closeMenu}
+                  >
+                    My Profile
+                  </NavLink>
+                  <NavLink
+                    to="/my-grades"
+                    className={({ isActive }) => (isActive ? "active" : "")}
+                    onClick={closeMenu}
+                  >
+                    My Grades
+                  </NavLink>
+                  <NavLink
+                    to="/view-detailed-reports"
+                    className={({ isActive }) => (isActive ? "active" : "")}
+                    onClick={closeMenu}
+                  >
+                    My Reports
+                  </NavLink>
+                </div>
+              )}
+            </div>
           ) : (
             <NavLink
               to="/signup"
@@ -124,7 +193,6 @@ const App = () => {
           )}
         </nav>
       </header>
-
       {/* Main Content */}
       <Routes>
         <Route path="/" element={<Homepage />} />
@@ -139,8 +207,12 @@ const App = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/simulation" element={<Simulation />} />
         <Route path="/landing" element={<Landing />} />
-        {/* Add the Profile route */}
         <Route path="/profile" element={<Profile />} />
+        <Route path="/my-grades" element={<MyGrades />} /> {/* New route */}
+        <Route
+          path="/view-detailed-reports"
+          element={<DetailedReports />}
+        /> {/* New route */}
       </Routes>
     </div>
   );

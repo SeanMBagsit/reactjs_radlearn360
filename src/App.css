@@ -5,7 +5,6 @@
   cursor: pointer; /* Makes it clickable */
   font-weight: inherit; /* Keeps the same font weight */
 }
-
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -18,21 +17,17 @@
   z-index: 1000;
   transition: background-color 0.3s ease;
 }
-
 .navbar:hover {
   background-color: #457b9d;
 }
-
 header .logo {
   font-size: 1.5rem;
   font-weight: bold;
 }
-
 .nav-links {
   display: flex;
   gap: 1.5rem;
 }
-
 .nav-links a {
   position: relative;
   text-decoration: none;
@@ -44,33 +39,29 @@ header .logo {
   letter-spacing: 0.1em;
   border-radius: 5px;
 }
-
 /* Hover effect for general links */
 .nav-links a:hover {
   background-color: #457b9d;
   color: #ffffff;
 }
-
 /* Active link style */
 .nav-links a.active {
   background-color: #457b9d;
   color: #ffffff;
   padding: 10px 20px;
   border-radius: 5px;
-} 
-
+}
 /* Line effect under the Study, Home, and Simulation links */
-.nav-links a:nth-child(1), 
-.nav-links a:nth-child(2), 
+.nav-links a:nth-child(1),
+.nav-links a:nth-child(2),
 .nav-links a:nth-child(3) {
   display: inline-block;
   position: relative;
 }
-
 .nav-links a:nth-child(1)::after,
 .nav-links a:nth-child(2)::after,
 .nav-links a:nth-child(3)::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -79,19 +70,12 @@ header .logo {
   background-color: black;
   transition: width 0.3s ease;
 }
-
 /* Hover effect for the Study, Home, and Simulation links */
 .nav-links a:nth-child(1):hover::after,
 .nav-links a:nth-child(2):hover::after,
 .nav-links a:nth-child(3):hover::after {
   width: 100%;
 }
-
-/* Remove the tooltip effect */
-.nav-links a::after {
-  content: none;
-}
-
 /* Hamburger Menu Styles */
 .hamburger {
   display: none;
@@ -101,7 +85,6 @@ header .logo {
   width: 30px;
   height: 21px;
 }
-
 .hamburger span {
   display: block;
   height: 3px;
@@ -110,20 +93,104 @@ header .logo {
   border-radius: 10px;
   transition: all 0.3s ease-in-out;
 }
-
 /* Hamburger Animation */
 .hamburger.open span:nth-child(1) {
   transform: translateY(9px) rotate(45deg);
 }
-
 .hamburger.open span:nth-child(2) {
   opacity: 0;
 }
-
 .hamburger.open span:nth-child(3) {
   transform: translateY(-9px) rotate(-45deg);
 }
-
+/* Profile Dropdown */
+.profile-dropdown {
+  position: relative;
+  display: inline-flex;
+  justify-content: center; /* Center the PROFILE text */
+  align-items: center;
+}
+.profile-name {
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: black;
+  margin-left: 10px;
+  margin-top: 7px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.3s ease;
+}
+.profile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  z-index: 1000;
+  border-radius: 5px;
+  width: 130px;
+}
+/* Apply the same styles to profile menu links */
+.profile-menu a {
+  position: relative;
+  text-decoration: none;
+  color: rgb(94, 90, 90);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  letter-spacing: 0.1em;
+  border-radius: 5px;
+}
+/* Hover effect for profile menu links */
+.profile-menu a:hover {
+  background-color: transparent; /* Remove the background color on hover */
+  color: rgb(94, 90, 90); /* Keep the default text color */
+}
+/* Active link style for profile menu */
+.profile-menu a.active {
+  background-color: #457b9d;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+/* Line effect under the profile menu links */
+.profile-menu a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: black;
+  transition: width 0.3s ease;
+}
+/* Hover effect for the line under profile menu links */
+.profile-menu a:hover::after {
+  width: 100%;
+}
+.profile-dropdown:hover .profile-menu,
+.profile-dropdown .profile-menu.open {
+  display: block;
+}
+/* Responsive Design for Dropdown */
+@media (max-width: 768px) {
+  .profile-menu {
+    width: 100%;
+    box-shadow: none;
+    background-color: #ffffff;
+    position: static; /* Make it appear below the PROFILE text */
+    padding: 10px 0;
+  }
+  .profile-menu a {
+    text-align: center;
+    padding: 15px 0;
+    font-size: 12px;
+  }
+}
 /* Content Styling */
 .content {
   padding: 40px;
@@ -132,7 +199,6 @@ header .logo {
   max-width: 1200px;
   margin: 0 auto;
 }
-
 /* Content Header Styling */
 .content h1 {
   font-size: 2.2rem;
@@ -143,7 +209,6 @@ header .logo {
   font-weight: bold;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
 }
-
 /* Image Container Styling */
 .body-chart {
   display: flex;
@@ -152,7 +217,6 @@ header .logo {
   gap: 20px;
   flex-wrap: wrap;
 }
-
 /* Human Body Image Container */
 .human-body {
   position: relative;
@@ -160,7 +224,6 @@ header .logo {
   text-align: center;
   max-width: 550px;
 }
-
 /* Body Image */
 .body-img {
   width: 100%;
@@ -170,14 +233,12 @@ header .logo {
   border-radius: 12px;
   border: 3px solid transparent;
 }
-
 /* Hover Effects */
 .body-img:hover {
   transform: scale(1.08);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
   border-color: rgba(255, 255, 255, 0.5);
 }
-
 /* Tooltip Styling */
 .tooltip {
   position: absolute;
@@ -197,42 +258,35 @@ header .logo {
   visibility: hidden;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
-
 /* Tooltip Text */
 .tooltip-text {
   display: block;
   font-size: 1.1rem;
   letter-spacing: 0.05em;
 }
-
 /* Tooltip Hover Effect */
 .human-body:hover .tooltip {
   opacity: 1;
   visibility: visible;
   transform: translateY(-60%);
 }
-
 /* Tooltip Positioning */
 #body-1 .tooltip {
   left: 10%;
 }
-
 #body-2 .tooltip {
   right: 10%;
 }
-
 /* Responsive Design */
 @media (max-width: 1024px) {
   .body-img {
     max-width: 90%;
   }
 }
-
 @media (max-width: 768px) {
   .hamburger {
     display: flex;
   }
-  
   .nav-links {
     display: none;
     position: absolute;
@@ -247,106 +301,47 @@ header .logo {
     gap: 0;
     z-index: 999;
   }
-  
   .nav-links.open {
     display: flex;
   }
-  
   .nav-links a {
     width: 100%;
     text-align: center;
     padding: 15px 0;
     border-radius: 0;
   }
-  
   .nav-links a:hover {
     background-color: #f0f0f0;
     color: #020202;
   }
-  
   .nav-links a.active {
     border-radius: 0;
     width: 100%;
   }
-  
   .nav-links a::after {
     display: none;
   }
-  
   .content h1 {
     font-size: 1.8rem;
   }
-  
   .tooltip {
     width: 110px;
     font-size: 0.9rem;
   }
 }
-
 @media (max-width: 480px) {
   .body-chart {
     flex-direction: column;
     gap: 15px;
   }
-
   .human-body {
     margin: 0;
   }
-
   .body-img {
     max-width: 100%;
   }
-
   .tooltip {
     font-size: 0.85rem;
     width: 100px;
   }
-
-/* Profile Dropdown */
-.profile-dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.profile-name {
-  cursor: pointer;
-  font-size: 1rem;
-  color: white;
-  margin-left: 10px;
-}
-
-.profile-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: white;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  z-index: 1000;
-  border-radius: 5px;
-}
-
-.profile-dropdown:hover .profile-menu {
-  display: block;
-}
-
-.profile-menu p {
-  margin: 5px 0;
-  font-size: 0.9rem;
-}
-
-.logout-btn {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.logout-btn:hover {
-  background-color: #e60000;
-}
 }
