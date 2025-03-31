@@ -894,7 +894,7 @@
                             onClick={enterSimulation}
                             className="start-button"
                         >
-                            Start Simulation
+                            Start Simulations
                         </button>
                     </div>
                 )}
