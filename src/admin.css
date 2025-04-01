@@ -1,0 +1,288 @@
+/* Admin Container */
+.admin-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 10vh auto 0; /* Add top margin as a percentage of viewport height */
+  }
+  
+  /* Admin Title */
+  .admin-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Toggle Switch Container */
+  .toggle-switch-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Toggle Labels */
+  .toggle-label {
+    font-size: 1rem;
+    margin: 0 10px;
+    color: #aaa;
+    transition: color 0.3s ease;
+  }
+  .toggle-label.active {
+    color: #333;
+    font-weight: bold;
+  }
+  
+  /* Toggle Switch */
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: background-color 0.4s;
+    border-radius: 34px;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: transform 0.4s;
+    border-radius: 50%;
+  }
+  input:checked + .slider {
+    background-color: #2196f3;
+  }
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+  
+  /* Admin Form */
+  .admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+    color: black;
+  }
+  .admin-input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+  }
+  .admin-input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  .admin-button {
+    padding: 10px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .admin-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* User Records */
+  .user-records-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  .user-list {
+    list-style: none;
+    padding: 0;
+  }
+  .user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .user-info {
+    font-size: 1rem;
+    color: #555;
+  }
+  .user-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .edit-button {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .edit-button:hover {
+    background-color: #218838;
+  }
+  .delete-button {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #dc3545;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .delete-button:hover {
+    background-color: #c82333;
+  }
+  .view-performance-button {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .view-performance-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Modal Overlay */
+  .dr-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Modal Content */
+  .dr-modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Modal Header */
+  .dr-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .dr-modal-title {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  .dr-print-button {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .dr-print-button:hover {
+    background-color: #218838;
+  }
+  
+  /* Reports Table */
+  .dr-reports-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  .dr-reports-table th,
+  .dr-reports-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  .dr-reports-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  .dr-pass {
+    color: green;
+  }
+  .dr-fail {
+    color: red;
+  }
+  
+  /* Close Modal Button */
+  .dr-close-modal {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #dc3545;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .dr-close-modal:hover {
+    background-color: #c82333;
+  }
+  
+  /* Dropdown Menu Styling */
+  #timestamp-dropdown {
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 250px;
+    background-color: #fff;
+    color: black; /* Ensure text color is black */
+    transition: border-color 0.3s ease;
+  }
+  #timestamp-dropdown:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  #timestamp-dropdown option {
+    color: black; /* Ensure dropdown options text color is black */
+  }

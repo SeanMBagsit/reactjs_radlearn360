@@ -68,17 +68,18 @@ const SignUp = () => {
       console.log("User profile updated successfully"); // Debugging log
 
 
-      // Step 3: Store additional user data in Firestore
-      const userDocRef = doc(db, "users", user.uid);
-      await setDoc(userDocRef, {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        username: formData.username,
-        email: formData.email,
-        contactNumber: formData.contactNumber,
-        createdAt: new Date(),
-      });
-      console.log("User data saved to Firestore successfully");
+        // Step 3: Store additional user data in Firestore
+    const userDocRef = doc(db, "users", user.uid);
+    await setDoc(userDocRef, {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      username: formData.username,
+      email: formData.email,
+      contactNumber: formData.contactNumber,
+      role: "user", // Add default role as "user"
+      createdAt: new Date(),
+    });
+    console.log("User data saved to Firestore successfully");
 
             // Clear form after successful submission
 

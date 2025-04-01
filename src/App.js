@@ -17,6 +17,7 @@ import Profile from "./profile";
 import MyGrades from "./my-grades"; // Import new component
 import DetailedReports from "./view-detailed-reports"; // Import new component
 import { auth } from "./firebaseConfig";
+import Admin from "./admin"; // Import Admin component
 
 const App = () => {
   const location = useLocation();
@@ -82,7 +83,6 @@ const App = () => {
         closeProfileDropdown();
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -119,12 +119,13 @@ const App = () => {
           >
             Study
           </NavLink>
+          {/* Replace Simulation with Admin */}
           <NavLink
-            to="/simulation"
+            to="/admin"
             className={({ isActive }) => (isActive ? "active" : "")}
             onClick={closeMenu}
           >
-            Simulation
+            dashboard
           </NavLink>
           {/* Dynamically update navigation based on authentication state */}
           {user ? (
@@ -158,27 +159,42 @@ const App = () => {
                     zIndex: 1000,
                   }}
                 >
-                  <NavLink
-                    to="/profile"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                    onClick={closeMenu}
-                  >
-                    My Profile
-                  </NavLink>
-                  <NavLink
-                    to="/my-grades"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                    onClick={closeMenu}
-                  >
-                    My Grades
-                  </NavLink>
-                  <NavLink
-                    to="/view-detailed-reports"
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                    onClick={closeMenu}
-                  >
-                    My Reports
-                  </NavLink>
+                  {/* Show only Logout button in /admin */}
+                  {location.pathname === "/admin" ? (
+                    <button
+                      onClick={() => {
+                        auth.signOut();
+                        closeProfileDropdown();
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Logout
+                    </button>
+                  ) : (
+                    <>
+                      <NavLink
+                        to="/profile"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                        onClick={closeMenu}
+                      >
+                        My Profile
+                      </NavLink>
+                      <NavLink
+                        to="/my-grades"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                        onClick={closeMenu}
+                      >
+                        My Grades
+                      </NavLink>
+                      <NavLink
+                        to="/view-detailed-reports"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                        onClick={closeMenu}
+                      >
+                        My Reports
+                      </NavLink>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -213,6 +229,7 @@ const App = () => {
           path="/view-detailed-reports"
           element={<DetailedReports />}
         /> {/* New route */}
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </div>
   );
