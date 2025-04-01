@@ -16,7 +16,8 @@ import Landing from "./landing";
 import Profile from "./profile";
 import MyGrades from "./my-grades"; // Import new component
 import DetailedReports from "./view-detailed-reports"; // Import new component
-import { auth } from "./firebaseConfig";
+import { db, auth } from "./firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
 import Admin from "./admin"; // Import Admin component
 
 const App = () => {
@@ -24,7 +25,7 @@ const App = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false); // State for dropdown
-
+  const [role, setRole] = useState(null);
   const isStudyRoute = () => {
     const studyPaths = [
       "/study",
@@ -39,10 +40,6 @@ const App = () => {
     return studyPaths.some((path) => location.pathname === path);
   };
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
   const closeMenu = () => {
     setMenuOpen(false);
   };
@@ -53,15 +50,37 @@ const App = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
+  
+        // Fetch the user's role from Firestore
+        try {
+          const userID = currentUser.uid;
+          const userDocRef = doc(db, "users", userID);
+          const userDocSnap = await getDoc(userDocRef);
+  
+          if (userDocSnap.exists()) {
+            const userData = userDocSnap.data();
+            const userRole = userData.role || null; // Extract the "role" field
+            setRole(userRole);
+            console.log("User Role:", userRole);
+          } else {
+            console.log("No such document!");
+            setRole(null);
+          }
+        } catch (error) {
+          console.error("Error fetching user role:", error);
+          setRole(null);
+        }
       } else {
         setUser(null);
+        setRole(null);
       }
     });
-    return () => unsubscribe();
-  }, []);
+  
+    return () => unsubscribe(); // Cleanup subscription on unmount
+  }, []); // Dependency array ensures this runs only once on mount/unmount
 
   useEffect(() => {
     if (location.pathname === "/") {
@@ -71,7 +90,7 @@ const App = () => {
     }
   }, [location.pathname]);
 
-  // Add event listener to close dropdown when clicking outside
+  // Add event listener when profile is clicked
   useEffect(() => {
     const handleClickOutside = (event) => {
       const profileDropdown = document.querySelector(".profile-dropdown");
@@ -88,22 +107,11 @@ const App = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [profileDropdownOpen]);
-
+  
   return (
     <div>
-      {/* Navigation Bar */}
       <header className="navbar">
         <div className="logo">RadLearn360</div>
-        {/* Hamburger Menu Button */}
-        <div
-          className={`hamburger ${menuOpen ? "open" : ""}`}
-          onClick={toggleMenu}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        {/* Navigation Links */}
         <nav className={`nav-links ${menuOpen ? "open" : ""}`}>
           <NavLink
             to="/"
@@ -112,6 +120,7 @@ const App = () => {
           >
             Home
           </NavLink>
+
           <NavLink
             to="/study"
             className={isStudyRoute() ? "active" : ""}
@@ -119,57 +128,31 @@ const App = () => {
           >
             Study
           </NavLink>
-          {/* Replace Simulation with Admin */}
-          <NavLink
-            to="/admin"
-            className={({ isActive }) => (isActive ? "active" : "")}
-            onClick={closeMenu}
-          >
-            dashboard
-          </NavLink>
-          {/* Dynamically update navigation based on authentication state */}
-          {user ? (
-            <div
-              className="profile-dropdown"
-              style={{ display: "flex", justifyContent: "center" }}
+
+          
+
+          {role === "user" && (
+            <NavLink
+              to="/simulation"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              onClick={closeMenu}
             >
+              Simulation
+            </NavLink>
+          )}
+
+          {role === "user" && (
+            <div className="profile-dropdown">
               <div
                 className="profile-name"
-                onClick={() =>
-                  setProfileDropdownOpen(!profileDropdownOpen)
-                } // Toggle dropdown on click
+                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
               >
                 PROFILE {profileDropdownOpen ? "+" : "-"}
               </div>
               {profileDropdownOpen && (
-                <div
-                  className="profile-menu"
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    position: "absolute",
-                    top: "100%",
-                    left: 0,
-                    right: 0,
-                    backgroundColor: "#ffffff",
-                    padding: "10px",
-                    boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
-                    borderRadius: "5px",
-                    zIndex: 1000,
-                  }}
-                >
-                  {/* Show only Logout button in /admin */}
+                <div className="profile-menu">
                   {location.pathname === "/admin" ? (
-                    <button
-                      onClick={() => {
-                        auth.signOut();
-                        closeProfileDropdown();
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      Logout
-                    </button>
+                    <button onClick={() => auth.signOut()}>Logout</button>
                   ) : (
                     <>
                       <NavLink
@@ -198,7 +181,48 @@ const App = () => {
                 </div>
               )}
             </div>
-          ) : (
+          )}
+
+
+          {role === "admin" && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              onClick={closeMenu}
+            >
+              Dashboard
+            </NavLink>
+          )}
+
+{role === "admin" && (
+            <div className="profile-dropdown">
+              <div
+                className="profile-name"
+                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+              >
+                PROFILE {profileDropdownOpen ? "+" : "-"}
+              </div>
+              {profileDropdownOpen && (
+                <div className="profile-menu">
+                  {location.pathname === "/admin" ? (
+                    <button onClick={() => auth.signOut()}>Logout</button>
+                  ) : (
+                    <>
+                      <NavLink
+                        to="/profile"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                        onClick={closeMenu}
+                      >
+                        My Profile
+                      </NavLink>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {!user && (
             <NavLink
               to="/signup"
               className={({ isActive }) => (isActive ? "active" : "")}
