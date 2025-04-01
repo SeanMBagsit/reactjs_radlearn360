@@ -204,31 +204,52 @@
     overflow-y: auto;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
+
+  /*user account */
+  .dr-modal-email{
+    color: black;
+  }
   
   /* Modal Header */
   .dr-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+  }
+  
+  .dr-modal-score {
+    font-size: 1.5rem;
+   
+    font-weight: bold;
+    color: #333;
   }
   .dr-modal-title {
     font-size: 1.5rem;
     color: #333;
   }
-  .dr-print-button {
-    padding: 5px 10px;
-    font-size: 0.9rem;
-    color: #fff;
-    background-color: #28a745;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  .dr-print-button:hover {
-    background-color: #218838;
-  }
+  /* Container for the Print Report button */
+.dr-print-button-container {
+  display: flex;
+  justify-content: flex-end; /* Aligns the button to the right */
+  margin-top: 10px; /* Adds spacing above the button */
+  margin-bottom: 10px; /* Adds spacing above the button */margin-top: 10px; /* Adds spacing above the button */
+}
+
+/* Styling for the Print Report button */
+.dr-print-button {
+  background-color: #28a745; /* Default green color */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* Hover effect for the Print Report button */
+.dr-print-button:hover {
+  background-color: #218838; /* Darker green on hover */
+}
   
   /* Reports Table */
   .dr-reports-table {

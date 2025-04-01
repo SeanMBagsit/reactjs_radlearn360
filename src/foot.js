@@ -251,7 +251,7 @@ const Foot = () => {
                         <iframe
                             width="560"
                             height="315"
-                            src="https://www.youtube.com/embed/au55A6jx5AU"
+                            src="https://www.youtube.com/embed/rnTZ6CK03Iw"
                             title="Demo Video for AP Hand"
                             frameBorder="2"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -260,12 +260,13 @@ const Foot = () => {
                         {/* Description */}
                         <div className="modal-description">
                             <p>
-                                <strong>Timestamp Reference:</strong> The AP foot positioning starts at <strong>0:00</strong> until <strong>0:40</strong> in the video.
+                                <strong>Timestamp Reference:</strong> This is an anterior-posterior (AP) foot demonstration video, showcasing the alignment and positioning of the foot from a front-to-back perspective to highlight its anatomical structure and functional movement. 
                             </p>
                         </div>
                         <div className="modal-description">
                             <p>
-                                <strong>Credits to owner of the video:</strong> @xrayimaginglady2586
+                                <strong>Credits to owner of the video:</strong> @jerrrsssachaso8675
+
                             </p>
                         </div>
                     </div>

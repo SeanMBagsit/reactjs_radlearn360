@@ -247,7 +247,7 @@ const Elbow = () => {
                         <iframe
                             width="560"
                             height="315"
-                            src="https://www.youtube.com/embed/x9eNfcFlz1Y"
+                            src="https://www.youtube.com/embed/YH5gA4_B3Io"
                             title="Demo Video for AP Elbow"
                             frameBorder="2"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -256,7 +256,7 @@ const Elbow = () => {
                         {/* Description */}
                         <div className="modal-description">
                             <p>
-                                <strong>Timestamp Reference:</strong> The AP elbow positioning starts at <strong>0:00</strong> until <strong>1:00</strong> in the video.
+                                <strong>Timestamp Reference:</strong> This is an anterior-posterior (AP) elbow demonstration video, providing a clear view of the elbow joint's alignment and movement from the front-to-back perspective to assess its structure and function.
                             </p>
                         </div>
                         <div className="modal-description">

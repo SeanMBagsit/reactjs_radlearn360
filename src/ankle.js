@@ -256,7 +256,7 @@ const Ankle = () => {
                     <iframe
                         width="560"
                         height="315"
-                        src="https://www.youtube.com/embed/-dCqrlN6Kb0"
+                        src="https://www.youtube.com/embed/3gTqd-tw3yA"
                         title="Demo Video for AP Hand"
                         frameBorder="2"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -265,12 +265,15 @@ const Ankle = () => {
                     {/* Description */}
                     <div className="modal-description">
                         <p>
-                            <strong>Timestamp Reference:</strong> The Lateral ankle positioning starts at <strong>1:02</strong> until <strong>1:36</strong> in the video.
+                            <strong>Timestamp Reference:</strong> This is a lateral ankle demonstration video, providing a side view of the ankle joint to illustrate its alignment, range of motion, and functional movement from this perspective.
+
+
                         </p>
                     </div>
                     <div className="modal-description">
                         <p>
-                            <strong>Credits to owner of the video:</strong> @xrayimaginglady2586
+                            <strong>Credits to owner of the video:</strong> @jerrrsssachaso8675
+
                         </p>
                     </div>
                 </div>

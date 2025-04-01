@@ -270,8 +270,8 @@ const Hand = () => {
                         {/* YouTube Video */}
                         <div className="video-container">
                         <iframe
-                            src="https://www.youtube.com/embed/VKjm3tao3GA"
-                            title="Demo Video for AP Hand"
+                            src="https://www.youtube.com/embed/BwCDglPIoYA"
+                            title="Demo Video for PA Hand"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                         ></iframe>
@@ -279,12 +279,12 @@ const Hand = () => {
                         {/* Description */}
                         <div className="modal-description">
                             <p>
-                                <strong>Timestamp Reference:</strong> The PA hand positioning starts at <strong>0:00</strong> until <strong>0:48</strong> in the video.
+                                <strong>Timestamp Reference:</strong> This is a demonstration video of the palmar (PA) hand view, showcasing the positioning and movement of the hand from a palmar perspective to highlight anatomical details and functionality.
                             </p>
                         </div>
                         <div className="modal-description">
                             <p>
-                                <strong>Credits to owner of the video:</strong> @xrayimaginglady2586
+                                <strong>Credits to owner of the video:</strong> @jerrrsssachaso8675
                             </p>
                         </div>
                     </div>

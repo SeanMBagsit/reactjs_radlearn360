@@ -236,7 +236,7 @@ const Wrist = () => {
                         <iframe
                             width="560"
                             height="315"
-                            src="https://www.youtube.com/embed/tZpo2bR8k4w"
+                            src="https://www.youtube.com/embed/0HNpAGp8bcM"
                             title="Demo Video for Lateral Wrist"
                             frameBorder="2"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -245,12 +245,12 @@ const Wrist = () => {
                         {/* Description */}
                         <div className="modal-description">
                             <p>
-                                <strong>Timestamp Reference:</strong> The Lateral wrist positioning starts at <strong>1:20</strong> until <strong>1:42</strong> in the video.
+                                <strong>Description:</strong>  This is a lateral wrist video demonstration showcasing the movement and positioning of the wrist from a side view.
                             </p>
                         </div>
                         <div className="modal-description">
                             <p>
-                                <strong>Credits to owner of the video:</strong> @xrayimaginglady2586
+                                <strong>Credits to owner of the video:</strong> @jerrrsssachaso8675
                             </p>
                         </div>
                     </div>
