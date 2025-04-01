@@ -184,8 +184,8 @@ body {
 
 .rotation-controls {
   position: absolute;
-  bottom: 50px;
-  right: 10px;
+  bottom: 120px;
+  left: 10px;
   color: white;
   font-size: clamp(9px, 2vw, 14px);
   z-index: 15;
@@ -231,7 +231,7 @@ body {
 .timer {
   position: absolute;
   top: 20px;
-  right: 50px;
+  left: 10px;
   text-align: right;
   color: white;
   font-size: clamp(10px, 2.5vw, 14px);
@@ -629,6 +629,72 @@ html {
   background-color: #0056b3; /* Optional: Darkens the button on hover */
 }
 
+
+/* Slide-Out Panel Toggle Button */
+.slide-out-toggle-button {
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Adjust based on panel visibility */
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 20;
+  transform: rotate(90deg); /* Rotate text for vertical alignment */
+  transition: right 0.3s ease-in-out; /* Smooth transition for positioning */
+}
+
+.slide-out-toggle-button:hover {
+  background: rgba(0, 0, 0, 0.8); /* Darken on hover */
+}
+
+/* Slide-Out Panel */
+.slide-out-panel {
+  position: fixed;
+  top: 0;
+  right: -300px; /* Start off-screen */
+  width: 300px;
+  height: 100%;
+  background: rgba(145, 120, 120, 0.8);
+  color: white;
+  transition: right 0.3s ease-in-out; /* Smooth slide-in effect */
+  z-index: 15;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto; /* Enable scrolling if content overflows */
+}
+
+.slide-out-panel h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #ffffff;
+}
+
+.slide-out-panel p {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #dcdcdc;
+}
+
+.slide-out-panel ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+
+
+/* When the panel is visible */
+.slide-out-panel-visible {
+  right: 0; /* Slide into view */
+}
+
+/* Adjust toggle button position when panel is visible */
+.slide-out-toggle-button-visible {
+  right: 250px; /* Move button to align with panel edge */
+}
 /* Media Query for Mobile Devices */
 @media (max-width: 600px) {
     .guide-content {

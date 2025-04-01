@@ -33,6 +33,8 @@ const Simulation = () => {
     const [simulationEndTime, setSimulationEndTime] = useState(null);
     const [modelPerformanceData, setModelPerformanceData] = useState([]);
     const [userEmail, setUserEmail] = useState("");
+    const [showSlideOutPanel, setShowSlideOutPanel] = useState(false); // State to control slide-out panel visibility
+
     
 
 
@@ -52,46 +54,9 @@ const Simulation = () => {
             targetRotation: { x: 0, y: 0, z: 0 },
             threshold: 0.5,
             scale: { x: 1, y: 1, z: 1 },
-            instructionText: "Properly simulate the PA Hand position",
-            guideText: [
-                {
-                    type: "heading",
-                    content: ""
-                },
-                {
-                    type: "section",
-                    content: {
-                        technicalFactors: [
-                            "Minimum SID: 40 inches (100 cm).",
-                            "IR size: 10 x 12 inches (24 x 30 cm), portrait; collimate to area of interest.",
-                            "kVp range: 55 to 65.",
-                        ],
-                        shielding: "Shield radiosensitive tissues outside the region of interest.",
-                        patientPosition: "Seat patient at the end of the table with hand and forearm extended.",
-                        partPosition: [
-                            "Pronate hand with palmar surface in contact with IR; spread fingers slightly.",
-                            "Align the long axis of hand and forearm with the long axis of IR.",
-                            "Center hand and wrist to IR."
-                        ],
-                        cr: "CR perpendicular to IR, directed to third MCP joint."
-                    }
-                },
-                {
-                    type: "heading",
-                    content: <strong>How to Simulate in 3D Environment?</strong>
-                },
-                {
-                    type: "list",
-                    items: [
-                        "- Adjust model to its Target Model Position: (0.61, -8.88, -7.22)",
-                        "- Adjust model to its Target Model Rotation: (0°, 0°, 0°)",
-                        "- To confirm, click Verify Placement",
-                        "- If verified, click Next to continue the simulation.",
-                        "- If verification fails, refine the position and rotation until the criteria are met."
-                    ]
-                }
-            ],
-            imagePath: '/pics/hand.png' // Add image path here
+            instructionText: "The objective of this simulation is to properly simulate the PA Hand position.",
+            positionText:"x: 0.61, y: -8.88, z: -7.22",
+            rotationText:"x: 0, y: 0, z: 0",
         },
         {
             ModelFile: '/models/wrist.glb',
@@ -103,48 +68,10 @@ const Simulation = () => {
             },
             threshold: 0.1,
             scale: { x: 6, y: 6, z: 6 },
-            instructionText: "Properly simulate the Lateral Wrist position",
-            guideText: [
-                {
-                    type: "heading",
-                    content: ""
-                },
-                {
-                    type: "section",
-                    content: {
-                        technicalFactors: [
-                            "Minimum SID: 40 inches (100 cm).",
-                            "IR size: 8 x 10 inches (18 x 24 cm), portrait; smallest IR available and collimate to area of interest",
-                            "kVp range: 60 to 70 ."
-                        ],
-                        shielding: "Shield radiosensitive tissues outside the region of interest.",
-                        patientPosition: "Seat patient at the end of the table, with arm and forearm resting on the table. Place wrist and hand on IR in a thumb-up lateral position. Shoulder, elbow, and wrist should be on the same horizontal plane.",
-                        partPosition: [
-                            "Align and center hand and wrist to the long axis of IR.",
-                            "Adjust hand and wrist into a true lateral position, with fingers comfortably extended; if support is needed to prevent motion, use a radiolucent support block and sandbag, and place the block against extended hand and fingers.",
-                        ],
-                        cr: "CR perpendicular to IR, directed to midcarpal area."
-                    }
-                },
-                {
-                    type: "heading",
-                    content: <strong>How to Simulate in 3D Environment?</strong>
-                },
-                {
-                    type: "list",
-                    items: [
-                        "- Adjust model to its Target Model Position: (1.39, 0.08, -0.42 )",
-                        "- Adjust model to its Target Model Rotation: (0°, 0°, -90°)",
-                        "- To confirm, click Verify Placement",
-                        "- If verified, click Next to continue the simulation.",
-                        "- If verification fails, refine the position and rotation until the criteria are met.",
-
-                    ]
-                },
-            ],
-            imagePath: '/pics/wrist.png' // Add image path here
+            instructionText: "The objective of this simulation is to properly simulate the Lateral Wrist position.",
+            positionText:"x: 1.39, y: 0.08, z: -0.42 ",
+            rotationText:"x: 0, y: 0, z:-90",
         },
-        
         {
             ModelFile: '/models/elbow.glb',
             targetPosition: { x: -3.63, y: -3.33, z: 4.66 },
@@ -155,46 +82,9 @@ const Simulation = () => {
             },
             threshold: 0.2,
             scale: { x: 4, y: 4, z: 4 },
-            instructionText: "Properly simulate the AP Elbow position",
-            guideText: [
-                {
-                    type: "heading",
-                    content: ""
-                },
-                {
-                    type: "section",
-                    content: {
-                        technicalFactors: [
-                            "Minimum SID: 40 inches (100 cm).",
-                            "IR size: 10 x 12 inches (24 x 30 cm), portrait; smallest IR available and collimate to area of interest",
-                            "kVp range: 65 to 75 ."
-                        ],
-                        shielding: "Shield radiosensitive tissues outside the region of interest.",
-                        patientPosition: "Seat patient at the end of the table, with elbow fully extended, if possible. ",
-                        partPosition: [
-                            "Extend elbow, supinate hand, and align arm and forearm with the long axis of IR.",
-                            "Ask the patient to lean laterally as necessary for true AP projection. Palpate humeral epicondyles to ensure that the interepicondylar plane is parallel to the IR. </",
-                        ],
-                        cr: "CR perpendicular to IR, directed to mid-elbow joint, which is approximately 3/4 inch (2 cm) distal to the midpoint of a line between epicondyles."
-                    }
-                },
-                {
-                    type: "heading",
-                    content: <strong>How to Simulate in 3D Environment?</strong>
-                },
-                {
-                    type: "list",
-                    items: [
-                        "- Adjust model to its Target Model Position: (-3.63, -3.33, 4.66)",
-                        "- Adjust model to its Target Model Rotation: (0°, 0°, -180° / 180°)",
-                        "- To confirm, click Verify Placement",
-                        "- If verified, click Next to continue the simulation.",
-                        "- If verification fails, refine the position and rotation until the criteria are met.",
-
-                    ]
-                },
-            ],
-            imagePath: '/pics/elbow.png' // Add image path here
+            instructionText: "The objective of this simulation is to properly simulate the AP Elbow position.",
+            positionText:"x: -3.63, y: -3.33, z: 4.66 ",
+            rotationText:"x: 0, y: 0, z: -180 or 180",
         },
         {
             ModelFile: '/models/foot.glb',
@@ -206,51 +96,11 @@ const Simulation = () => {
             },
             threshold: 0.3,
             scale: { x: 1.2, y: 1.2, z: 1.2 },
-            instructionText: "Properly simulate the AP Foot position",
-            guideText: [
-                {
-                    type: "heading",
-                    content: ""
-                },
-                {
-                    type: "section",
-                    content: {
-                        technicalFactors: [
-                            "Minimum SID: 40 inches (100 cm).",
-                            "IR size:10 x 12 inches (24 x 30 cm), portrait",
-                            "kVp range: 55 to 65 ."
-                        ],
-                        shielding: "Shield radiosensitive tissues outside the region of interest.",
-                        patientPosition: "Place patient supine; provide a pillow for the patient’s head; flex knee and place plantar surface (sole) of affected foot flat on IR",
-                        partPosition: [
-                            "Extend (plantar flex) foot but maintain plantar surface resting flat and firmly on IR.",
-                            "Align and center long axis of foot to CR and to the long axis of the portion of IR being exposed.",
-                            "Use sandbags if necessary to prevent IR from slipping on the tabletop.",
-                            "If immobilization is needed, flex opposite knee and rest against affected knee for support.",
-                        ],
-                        cr: "Angle CR 10° posteriorly (toward heel) with CR perpendicular to metatarsals."
-                    }
-                },
-                {
-                    type: "heading",
-                    content: <strong>How to Simulate in 3D Environment?</strong>
-                },
-                {
-                    type: "list",
-                    items: [
-                        "- Adjust model to its Target Model Position: (0.22, -7.90, 1.26 )",
-                        "- Adjust model to its Target Model Rotation: (0°, 0°, 0°)",
-                        "- To confirm, click Verify Placement",
-                        "- If verified, click Next to continue the simulation.",
-                        "- If verification fails, refine the position and rotation until the criteria are met.",
-
-                    ]
-                },
-            ],
-            imagePath: '/pics/foot.png' // Add image path here
+            instructionText: "The objective of this simulation is to properly simulate the AP Foot position.",
+            positionText:"x: 0.22, y: -7.90, z: 1.26 ",
+            rotationText:"x: 0, y: 0, z: 0",
         },
-        {
-            
+        {  
             ModelFile: '/models/foot.glb',
             targetPosition: { x: -8.67, y: 0.24, z: 1.59 }, 
             targetRotation: { 
@@ -260,52 +110,20 @@ const Simulation = () => {
             },
             threshold: 0.3,
             scale: { x: 1, y: 1, z: 1 },
-            instructionText: "Properly simulate the Lateral Ankle position",
-            guideText: [
-                {
-                    type: "heading",
-                    content: ""
-                },
-                {
-                    type: "section",
-                    content: {
-                        technicalFactors: [
-                            "Minimum SID: 40 inches (100 cm).",
-                            "IR size: 10 x 12 inches (24 x 30 cm), portrait. ",
-                            "kVp range: 60 to 75."
-                        ],
-                        shielding: "Shield radiosensitive tissues outside the region of interest.",
-                        patientPosition: "Place the patient in the lateral recumbent position, affected side down; provide a pillow for the patient’s head; flex the knee of the affected limb approximately 45°. Place the opposite leg behind the injured limb to prevent over-rotation.",
-                        partPosition: [
-                            "Center and align the ankle joint to the CR and the long axis of the portion of the IR being exposed.",
-                            "Place support under the knee as needed to place the leg and foot in a true lateral position.",
-                        ],
-                        cr: "CR perpendicular to IR, directed to the medial malleolus."
-                    }
-                },
-                {
-                    type: "heading",
-                    content: <strong>How to Simulate in 3D Environment?</strong>
-                },
-                {
-                    type: "list",
-                    items: [
-                        "- Adjust model to its Target Model Position: (-8.67, 0.24, 1.59 )",
-                        "- Adjust model to its Target Model Rotation: (-180°, 90°, -90°)",
-                        "- To confirm, click Verify Placement",
-                        "- If verified, click Next to continue the simulation.",
-                        "- If verification fails, refine the position and rotation until the criteria are met.",
-
-                    ]
-                },
-            ],
-            imagePath: '/pics/ankle.png' // Add image path here
+            instructionText: "The objective of this simulation is to properly simulate the Lateral Ankle position.",
+            positionText:"x: -8.67, y: 0.24, z: 1.59 ",
+            rotationText:"x: -180, y: 90, z: -90",
         }
     ];
 
     const toggleGuide = () => {
         setShowGuide((prev) => !prev);
     };
+
+        // Toggle function for the slide-out panel
+        const toggleSlideOutPanel = () => {
+            setShowSlideOutPanel((prev) => !prev);
+        };
     
     
     const updateInstructionText = (modelIndex) => {
@@ -397,12 +215,13 @@ const Simulation = () => {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     };
+    
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
         updateInstructionText(currentItem);
         setTimer(60);
-
+    
         if (showModel) {
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(
@@ -412,28 +231,87 @@ const Simulation = () => {
                 1000
             );
             camera.position.set(0, 0, 60);
-            
+    
             const renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    
             modelViewerRef.current.innerHTML = '';
             modelViewerRef.current.appendChild(renderer.domElement);
-            
-            document.body.style.overflow = 'hidden';
-
+    
+            // Add ambient light
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambientLight);
     
+            // Add directional light
             const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
             directionalLight.position.set(1.5, 80, 0.5);
             directionalLight.castShadow = true;
             scene.add(directionalLight);
     
+            // Function to create a line for an axis with transparency and lighter colors
+                const createAxisLine = (start, end, color, opacity = 0.3) => {
+                    const geometry = new THREE.BufferGeometry().setFromPoints([start, end]);
+                    const material = new THREE.LineBasicMaterial({
+                        color: color,
+                        transparent: true, // Enable transparency
+                        opacity: opacity,  // Set opacity (0 = fully transparent, 1 = fully opaque)
+                    });
+                    return new THREE.Line(geometry, material);
+                };
+    
+            // Add +X axis (red line)
+            const xAxisPositive = createAxisLine(
+                new THREE.Vector3(0, 0, 0), // Start at origin
+                new THREE.Vector3(1000, 0, 0), // Extend in the positive X direction
+                0xff0000 // Red color
+            );
+            scene.add(xAxisPositive);
+    
+            // Add -X axis (red line)
+            const xAxisNegative = createAxisLine(
+                new THREE.Vector3(0, 0, 0), // Start at origin
+                new THREE.Vector3(-1000, 0, 0), // Extend in the negative X direction
+                0xff0000 // Red color
+            );
+            scene.add(xAxisNegative);
+    
+            // Add +Y axis (green line)
+            const yAxisPositive = createAxisLine(
+                new THREE.Vector3(0, 0, 0), // Start at origin
+                new THREE.Vector3(0, 1000, 0), // Extend in the positive Y direction
+                0x00ff00 // Green color
+            );
+            scene.add(yAxisPositive);
+    
+            // Add -Y axis (green line)
+            const yAxisNegative = createAxisLine(
+                new THREE.Vector3(0, 0, 0), // Start at origin
+                new THREE.Vector3(0, -1000, 0), // Extend in the negative Y direction
+                0x00ff00 // Green color
+            );
+            scene.add(yAxisNegative);
+    
+            // Add +Z axis (blue line)
+            const zAxisPositive = createAxisLine(
+                new THREE.Vector3(0, 0, 0), // Start at origin
+                new THREE.Vector3(0, 0, 1000), // Extend in the positive Z direction
+                0x0000ff // Blue color
+            );
+            scene.add(zAxisPositive);
+    
+            // Add -Z axis (blue line)
+            const zAxisNegative = createAxisLine(
+                new THREE.Vector3(0, 0, 0), // Start at origin
+                new THREE.Vector3(0, 0, -1000), // Extend in the negative Z direction
+                0x0000ff // Blue color
+            );
+            scene.add(zAxisNegative);
+    
+            // Load the model
             const loader = new GLTFLoader();
-    
             const currentSetting = simulationSettings[currentItem] || {};
-    
             const { ModelFile, scale } = currentSetting;
     
             if (ModelFile) {
@@ -460,7 +338,6 @@ const Simulation = () => {
                             x = Math.max(boundaries.minX, Math.min(x, boundaries.maxX));
                             y = Math.max(boundaries.minY, Math.min(y, boundaries.maxY));
                             z = Math.max(boundaries.minZ, Math.min(z, boundaries.maxZ));
-    
                             event.object.position.set(x, y, z);
                             setHandPosition({ x, y, z });
                         });
@@ -484,6 +361,7 @@ const Simulation = () => {
                 console.error('Model file not found in simulation settings for current item.');
             }
     
+            // Load X-ray model
             loader.load(
                 '/models/xray.glb',
                 (glb) => {
@@ -503,6 +381,7 @@ const Simulation = () => {
                 }
             );
     
+            // Add OrbitControls
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.25;
@@ -511,6 +390,7 @@ const Simulation = () => {
     
             const cameraControls = controls;
     
+            // Animation loop
             const animate = () => {
                 requestAnimationFrame(animate);
                 controls.update();
@@ -518,6 +398,7 @@ const Simulation = () => {
             };
             animate();
     
+            // Cleanup on unmount
             return () => {
                 renderer.dispose();
                 controls.dispose();
@@ -525,6 +406,8 @@ const Simulation = () => {
             };
         }
     }, [showModel, currentItem]);
+    
+    
     
     useEffect(() => {
         if (showModel && showLabConfirmation) return;
@@ -557,6 +440,8 @@ const Simulation = () => {
           return () => clearInterval(interval);
         }
       }, [timer, showModel, passedCurrentItem, labConfirmed, showLabConfirmation, timeoutId]);
+
+
 
       const handleVerifyPlacement = () => {
         // Exit early if controls are disabled or the timer has expired
@@ -907,127 +792,209 @@ const Simulation = () => {
                         </div>
                     </div>
 
-                    {/* Red Book Icon */}
-                    <div className="book-icon" onClick={toggleGuide}>
-                        📖
-                    </div>
 
-                    {/* Popup Guide */}
-{showGuide && (
-<div className="popup-guide-overlay">
-    <div className="popup-guide">
-        <button
-            className="close-guide-button"
-            onClick={toggleGuide}
-        >
-            X
-        </button>
-        <h3>Instructions:</h3>
-<div className="guide-content">
-{/* Image */}
-    <div className="guide-image">
-        <img src={simulationSettings[currentItem]?.imagePath} alt="Guide" />
-    </div>
-{/* Text */}
-<div className="guide-text">
-{simulationSettings[currentItem]?.guideText.map((section, index) => {
-    if (section.type === "heading") {
-        return <h4 key={index}>{section.content}</h4>;
-    } else if (section.type === "list") {
-        return (
-            <ul key={index}>
-                {section.items.map((item, idx) => {
-                    // Highlight coordinates (e.g., (0.61, -8.88, -7.22))
-                    let styledItem = item;
 
-                    // Match coordinates enclosed in parentheses
-                    const coordinateMatch = item.match(/\(.*?\)/);
-                    if (coordinateMatch) {
-                        const coordinate = coordinateMatch[0]; // Extract the matched coordinate
-                        styledItem = styledItem.replace(
-                            coordinate,
-                            `<span style="color: green;">${coordinate}</span>`
-                        );
-                    }
+                    {/* Slide-Out Panel Toggle Button */}
+                    <button
+                        className="slide-out-toggle-button"
+                        onClick={toggleSlideOutPanel}
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            right: showSlideOutPanel ? '300px' : '10px', // Adjust based on panel width
+                            background: 'rgba(145, 133, 133, 0.6)',
+                            color: 'white',
+                            border: 'none',
+                            padding: '10px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            zIndex: 20,
+                            transform: 'rotate(0deg)', // Remove rotation for vertical arrows
+                            fontSize: '30px', // Ensure arrows are clearly visible
+                        }}
+                    >
+                        {showSlideOutPanel ? '>>' : '<<'} {/* Use up and down arrows */}
+                    </button>
+                   {/* Slide-Out Panel */}
+<div
+    className="slide-out-panel"
+    style={{
+        position: 'fixed',
+        top: '0',
+        right: showSlideOutPanel ? '0' : '-300px', // Slide in/out effect
+        width: '300px',
+        height: '100%', // Full height of the viewport
+        background: 'linear-gradient(180deg, rgba(61, 58, 58, 0.9), rgba(35, 34, 34, 0.9))', // Gradient background for depth
+        color: 'white',
+        transition: 'right 0.3s ease-in-out',
+        zIndex: 15,
+        padding: '20px',
+        boxSizing: 'border-box',
+        overflowY: 'auto', // Enable vertical scrolling
+        boxShadow: '-5px 0 15px rgba(0, 0, 0, 0.5)', // Subtle shadow for depth
+        fontFamily: "'Roboto', sans-serif", // Modern font
+        fontSize: '14px', // Slightly larger font size
+        lineHeight: '1.6', // Improved readability
+    }}
+>
+    {/* Title */}
+    <h3 style={{ 
+        margin: '0 0 15px 0', 
+        fontSize: '18px', 
+        fontWeight: 'bold', 
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)', 
+        paddingBottom: '10px',
+        color: '#FFD700' // Gold for title
+    }}>
+        How to Simulate in 3D Environment?
+    </h3>
 
-                    // Highlight specific phrases like "Verify Placement" and "Next"
-                    styledItem = styledItem.replace(
-                        /\b(Verify Placement|Next)\b/g,
-                        (match) => `<span style="color: green;">${match}</span>`
-                    );
+    {/* Dynamic Instruction Text */}
+    <p style={{ 
+        margin: '0 0 15px 0', 
+        fontSize: '14px', 
+        color: '#00BFFF' // Light blue for dynamic text
+    }}>
+        {simulationSettings[currentItem]?.instructionText}
+    </p>
 
-                    styledItem = styledItem.replace(
-                        /\b(verification fails)\b/gi,
-                        (match) => `<span style="color: red;">${match}</span>`
-                    );
-
-                    return (
-                        <li key={idx} dangerouslySetInnerHTML={{ __html: styledItem }} />
-                    );
-                })}
-            </ul>
-        );
-    } else if (section.type === "section") {
-        return (
-            <div key={index} className="scrollable-section">
-                {/* Technical Factors */}
-                <h4><strong>Technical Factors:</strong></h4>
-                <ul>
-                    {section.content.technicalFactors.map((item, idx) => {
-                        // Highlight specific phrases in technical factors
-                        const highlightedItem = item.replace(
-                            /\b(Minimum SID|IR size|kVp range)\b/g,
-                            (match) => `<span style="color: black;">${match}</span>`
-                        );
-                        return (
-                            <li key={idx} dangerouslySetInnerHTML={{ __html: highlightedItem }} />
-                        );
-                    })}
-                </ul>
-
-                {/* Shielding */}
-                <h4><strong>Shielding:</strong></h4>
-                <p>{section.content.shielding}</p>
-
-                {/* Patient Position */}
-                <h4><strong>Patient Position:</strong></h4>
-                <p>{section.content.patientPosition}</p>
-
-                {/* Part Position */}
-                <h4><strong>Part Position:</strong></h4>
-                <ul>
-                    {section.content.partPosition.map((item, idx) => {
-                        // Highlight coordinates in part position
-                        const match = item.match(/\(.*?\)/);
-                        if (match) {
-                            const coordinate = match[0];
-                            const beforeCoordinate = item.split(coordinate)[0];
-                            return (
-                                <li key={idx}>
-                                    {beforeCoordinate}
-                                    <span style={{ color: "green" }}>{coordinate}</span>
-                                </li>
-                            );
-                        }
-                        return <li key={idx}>{item}</li>; // If no coordinates, return the item as is
-                    })}
-                </ul>
-
-                {/* CR */}
-                <h4><strong>CR:</strong></h4>
-                <p>{section.content.cr}</p>
+    {/* Step 1 */}
+    <h2 style={{ 
+        margin: '20px 0 10px 0', 
+        fontSize: '16px', 
+        fontWeight: 'bold', 
+        color: '#FFA500' // Orange for step headers
+    }}>
+        Step 1: Adjust Model to its Target Model Position
+    </h2>
+    <p style={{ 
+        margin: '0 0 15px 0', 
+        fontSize: '14px', 
+        color: '#FFFFFF' 
+    }}>
+        <strong>Objective:</strong> Move the model to the exact coordinates (
+        <span style={{ color: '#00FF00' }}> {/* Green for coordinates */}
+            {simulationSettings[currentItem]?.positionText}
+        </span>
+        ).
+    </p>
+    <ul style={{ 
+        margin: '0 0 15px 0', 
+        paddingLeft: '20px', 
+        fontSize: '12px', 
+        color: 'rgba(255, 255, 255, 0.8)' 
+    }}>
+        <li>Locate the <span style={{ color: '#FF4500' }}>Model</span>.</li> {/* Red for keywords */}
+        <li>Drag the model to the target coordinates.</li>
+        <li>
+            Verify the position matches:
+            <div style={{ 
+                color: '#00FF00', // Green for coordinates
+                fontSize: '14px', 
+                marginTop: '5px', // Add spacing between text and value
+                marginLeft: '20px' // Indent for better readability
+            }}>
+               ( {simulationSettings[currentItem]?.positionText} )
             </div>
-        );
-    }
-    return null; // Ignore invalid sections
-})}
-</div>
-        </div>
-    </div>
-</div>
-)}
+        </li>
+    </ul>
 
-                    {/* Model Viewer */}
+    {/* Step 2 */}
+    <h2 style={{ 
+        margin: '20px 0 10px 0', 
+        fontSize: '16px', 
+        fontWeight: 'bold', 
+        color: '#FFA500' // Orange for step headers
+    }}>
+        Step 2: Adjust Model to its Target Model Rotation
+    </h2>
+    <p style={{ 
+        margin: '0 0 15px 0', 
+        fontSize: '14px', 
+        color: '#FFFFFF' 
+    }}>
+        <strong>Objective:</strong> Rotate the model to the orientation (
+        <span style={{ color: '#00FF00' }}> {/* Green for angles */}
+            {simulationSettings[currentItem]?.rotationText}
+        </span>
+        ).
+    </p>
+    <ul style={{ 
+        margin: '0 0 15px 0', 
+        paddingLeft: '20px', 
+        fontSize: '14px', 
+        color: 'rgba(255, 255, 255, 0.8)' 
+    }}>
+        <li>Locate the <span style={{ color: '#FF4500' }}>Rotation Slider</span>.</li> {/* Red for keywords */}
+        <li>Control the sliders to rotate the target angles.</li>
+        <li>
+            Verify the rotation matches:
+            <div style={{ 
+                color: '#00FF00', // Green for angles
+                fontSize: '14px', 
+                marginTop: '5px', // Add spacing between text and value
+                marginLeft: '20px' // Indent for better readability
+            }}>
+            ( {simulationSettings[currentItem]?.rotationText})
+            </div>
+        </li>
+    </ul>
+
+    {/* Step 3 */}
+    <h2 style={{ 
+        margin: '20px 0 10px 0', 
+        fontSize: '16px', 
+        fontWeight: 'bold', 
+        color: '#FFA500' // Orange for step headers
+    }}>
+        Step 3: Confirm the Placement
+    </h2>
+    <p style={{ 
+        margin: '0 0 15px 0', 
+        fontSize: '14px', 
+        color: '#FFFFFF' 
+    }}>
+        <strong>Objective:</strong> Validate the model's position and rotation.
+    </p>
+    <ul style={{ 
+        margin: '0 0 15px 0', 
+        paddingLeft: '20px', 
+        fontSize: '14px', 
+        color: 'rgba(255, 255, 255, 0.8)' 
+    }}>
+        <li>Locate the <strong style={{ color: '#FF4500' }}>Verify Placement</strong> button.</li> {/* Red for button */}
+        <li>Click the button to check accuracy.</li>
+        <li>Review feedback and refine if necessary.</li>
+    </ul>
+
+    {/* Step 4 */}
+    <h2 style={{ 
+        margin: '20px 0 10px 0', 
+        fontSize: '16px', 
+        fontWeight: 'bold', 
+        color: '#FFA500' // Orange for step headers
+    }}>
+        Step 4: Continue the Simulation
+    </h2>
+    <p style={{ 
+        margin: '0 0 15px 0', 
+        fontSize: '14px', 
+        color: '#FFFFFF' 
+    }}>
+        <strong>Objective:</strong> Proceed to the next stage of the simulation.
+    </p>
+    <ul style={{ 
+        margin: '0 0 15px 0', 
+        paddingLeft: '20px', 
+        fontSize: '14px', 
+        color: 'rgba(255, 255, 255, 0.8)' 
+    }}>
+        <li>Locate the <strong style={{ color: '#FF4500' }}>Next</strong> button.</li> {/* Red for button */}
+        <li>Click the button to continue if verified.</li>
+        <li>Refine and retry if verification fails.</li>
+    </ul>
+</div>
+        {/* Model Viewer */}
                     <div
                         id="model-viewer"
                         ref={modelViewerRef}
@@ -1053,20 +1020,11 @@ const Simulation = () => {
                         </button>
                     )}
 
-                    {/* Feedback Message */}
-                    {feedbackMessage && (
-                        <div 
-                            className="feedback-message"
-                            style={{ color: feedbackColor }}
-                        >
-                            {feedbackMessage}
-                        </div>
-                    )}
 
                     {/* Model Info */}
                     <div className="model-info">
-                        <div>Model Position: ({handPosition.x.toFixed(2)}, {handPosition.y.toFixed(2)}, {handPosition.z.toFixed(2)})</div>
-                        <div>Model Rotation: ({(handRotation.x * 180 / Math.PI).toFixed(2)}°, {(handRotation.y * 180 / Math.PI).toFixed(2)}°, {(handRotation.z * 180 / Math.PI).toFixed(2)}°)</div>
+                        <div>Model Position: (x: {handPosition.x.toFixed(2)}, y: {handPosition.y.toFixed(2)}, z: {handPosition.z.toFixed(2)})</div>
+                        <div>Model Rotation: (x: {(handRotation.x * 180 / Math.PI).toFixed(2)}°, y: {(handRotation.y * 180 / Math.PI).toFixed(2)}°, z: {(handRotation.z * 180 / Math.PI).toFixed(2)}°)</div>
                     </div>
 
                     {/* Rotation Controls */}
