@@ -261,7 +261,7 @@ const Elbow = () => {
                         </div>
                         <div className="modal-description">
                             <p>
-                                <strong>Credits to owner of the video:</strong> @xrayimaginglady2586
+                                <strong>Credits to owner of the video:</strong> @jerrrsssachaso8675
                             </p>
                         </div>
                     </div>
