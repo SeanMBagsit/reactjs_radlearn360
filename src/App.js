@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route, NavLink, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, NavLink, useLocation } from "react-router-dom";
 import "./App.css";
 import Study from "./study";
 import Upper from "./upper-ex";
@@ -16,9 +16,9 @@ import Landing from "./landing";
 import Profile from "./profile";
 import MyGrades from "./my-grades"; // Import new component
 import DetailedReports from "./view-detailed-reports"; // Import new component
+import Admin from "./admin"; // Import Admin component
 import { db, auth } from "./firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import Admin from "./admin"; // Import Admin component
 
 const App = () => {
   const location = useLocation();
@@ -26,6 +26,8 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false); // State for dropdown
   const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true); // Loading state
+
   const isStudyRoute = () => {
     const studyPaths = [
       "/study",
@@ -53,13 +55,13 @@ const App = () => {
     const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-  
+
         // Fetch the user's role from Firestore
         try {
           const userID = currentUser.uid;
           const userDocRef = doc(db, "users", userID);
           const userDocSnap = await getDoc(userDocRef);
-  
+
           if (userDocSnap.exists()) {
             const userData = userDocSnap.data();
             const userRole = userData.role || null; // Extract the "role" field
@@ -72,13 +74,16 @@ const App = () => {
         } catch (error) {
           console.error("Error fetching user role:", error);
           setRole(null);
+        } finally {
+          setLoading(false); // Mark loading as complete
         }
       } else {
         setUser(null);
         setRole(null);
+        setLoading(false); // Mark loading as complete
       }
     });
-  
+
     return () => unsubscribe(); // Cleanup subscription on unmount
   }, []); // Dependency array ensures this runs only once on mount/unmount
 
@@ -107,7 +112,24 @@ const App = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [profileDropdownOpen]);
-  
+
+  // Role-based route guard component
+  const RoleBasedRoute = ({ allowedRoles, children }) => {
+    if (!user) {
+      return <Navigate to="/signup" replace />;
+    }
+
+    if (!allowedRoles.includes(role)) {
+      return <Navigate to="/" replace />;
+    }
+
+    return children;
+  };
+
+  if (loading) {
+    return <div className="loading">Loading...</div>; // Display a loading message
+  }
+
   return (
     <div>
       <header className="navbar">
@@ -129,31 +151,25 @@ const App = () => {
             Study
           </NavLink>
 
-          
-
+          {/* Render user-specific links only after login */}
           {role === "user" && (
-            <NavLink
-              to="/simulation"
-              className={({ isActive }) => (isActive ? "active" : "")}
-              onClick={closeMenu}
-            >
-              Simulation
-            </NavLink>
-          )}
-
-          {role === "user" && (
-            <div className="profile-dropdown">
-              <div
-                className="profile-name"
-                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+            <>
+              <NavLink
+                to="/simulation"
+                className={({ isActive }) => (isActive ? "active" : "")}
+                onClick={closeMenu}
               >
-                PROFILE {profileDropdownOpen ? "+" : "-"}
-              </div>
-              {profileDropdownOpen && (
-                <div className="profile-menu">
-                  {location.pathname === "/admin" ? (
-                    <button onClick={() => auth.signOut()}>Logout</button>
-                  ) : (
+                Simulation
+              </NavLink>
+              <div className="profile-dropdown">
+                <div
+                  className="profile-name"
+                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                >
+                  PROFILE {profileDropdownOpen ? "+" : "-"}
+                </div>
+                {profileDropdownOpen && (
+                  <div className="profile-menu">
                     <>
                       <NavLink
                         to="/profile"
@@ -177,36 +193,31 @@ const App = () => {
                         My Reports
                       </NavLink>
                     </>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-
-
-          {role === "admin" && (
-            <NavLink
-              to="/admin"
-              className={({ isActive }) => (isActive ? "active" : "")}
-              onClick={closeMenu}
-            >
-              Dashboard
-            </NavLink>
-          )}
-
-{role === "admin" && (
-            <div className="profile-dropdown">
-              <div
-                className="profile-name"
-                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-              >
-                PROFILE {profileDropdownOpen ? "+" : "-"}
+                  </div>
+                )}
               </div>
-              {profileDropdownOpen && (
-                <div className="profile-menu">
-                  {location.pathname === "/admin" ? (
-                    <button onClick={() => auth.signOut()}>Logout</button>
-                  ) : (
+            </>
+          )}
+
+          {/* Render admin-specific links only after login */}
+          {role === "admin" && (
+            <>
+              <NavLink
+                to="/admin"
+                className={({ isActive }) => (isActive ? "active" : "")}
+                onClick={closeMenu}
+              >
+                Dashboard
+              </NavLink>
+              <div className="profile-dropdown">
+                <div
+                  className="profile-name"
+                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                >
+                  PROFILE {profileDropdownOpen ? "+" : "-"}
+                </div>
+                {profileDropdownOpen && (
+                  <div className="profile-menu">
                     <>
                       <NavLink
                         to="/profile"
@@ -216,10 +227,10 @@ const App = () => {
                         My Profile
                       </NavLink>
                     </>
-                  )}
-                </div>
-              )}
-            </div>
+                  </div>
+                )}
+              </div>
+            </>
           )}
 
           {!user && (
@@ -253,7 +264,15 @@ const App = () => {
           path="/view-detailed-reports"
           element={<DetailedReports />}
         /> {/* New route */}
-        <Route path="/admin" element={<Admin />} />
+        {/* Admin route with role-based protection */}
+        <Route
+          path="/admin"
+          element={
+            <RoleBasedRoute allowedRoles={["admin"]}>
+              <Admin />
+            </RoleBasedRoute>
+          }
+        />
       </Routes>
     </div>
   );

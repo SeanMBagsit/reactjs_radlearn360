@@ -39,7 +39,7 @@ export default function Landing() {
         }
 
         // Redirect to a protected/dashboard page (you can implement routing here)
-      window.location.href = "/simulation"; // Example redirect
+      window.location.href = "/"; // Example redirect
     } catch (err) {
       console.error("Error signing in:", err);
       setError(err.message || "Invalid email or password.");

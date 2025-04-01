@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import {
   collection,
-  addDoc,
   getDocs,
   updateDoc,
   deleteDoc,
-  getDoc,
   doc,
   query,
   where,
+  getDoc,
 } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword, deleteUser as deleteAuthUser } from "firebase/auth";
+import { getAuth, deleteUser as deleteAuthUser } from "firebase/auth";
 import { db, auth } from "./firebaseConfig"; // Adjust the import based on your project structure
 import "./admin.css"; // Import your CSS file for styling
 
@@ -22,9 +21,9 @@ const Admin = () => {
     email: "",
     contactNumber: "",
     username: "",
+    role: "user", // Default role
   });
   const [editingUserId, setEditingUserId] = useState(null);
-  const [isAddingUser, setIsAddingUser] = useState(true); // Toggle state
   const [error, setError] = useState(""); // Error state
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,6 +31,8 @@ const Admin = () => {
   const [selectedTimestamp, setSelectedTimestamp] = useState(""); // State for selected timestamp
   const [uniqueTimestamps, setUniqueTimestamps] = useState([]); // Unique simulation timestamps for dropdown
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Edit modal state
+  const [detailedReport, setDetailedReport] = useState(null); // State for detailed report
+  const [grade, setGrade] = useState(null); // State for grade
 
   // Fetch users from Firestore
   const fetchUsers = async () => {
@@ -51,52 +52,6 @@ const Admin = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-
-  // Function to add a new user
-  const addUser = async (e) => {
-    e.preventDefault();
-    try {
-      const authInstance = getAuth(); // Initialize Firebase Auth
-      // Create a new user in Firebase Authentication with email and default password
-      const userCredential = await createUserWithEmailAndPassword(
-        authInstance,
-        newUser.email,
-        "000000" // Default password
-      );
-      const uid = userCredential.user.uid; // Get the UID of the newly created user
-
-      // Create a new user object with the required fields and include the UID
-      const newUserWithRole = {
-        uid: uid, // Store the UID in Firestore
-        contactNumber: newUser.contactNumber, // Ensure this is a string
-        createdAt: new Date(), // Use JavaScript Date object for Firestore Timestamp
-        email: newUser.email, // Ensure this is a string
-        firstName: newUser.firstName, // Ensure this is a string
-        lastName: newUser.lastName, // Ensure this is a string
-        role: "user", // Set default role to 'user'
-        username: newUser.username, // Ensure this is a string
-      };
-
-      // Add the user details to Firestore under the "users" collection
-      await addDoc(collection(db, "users"), newUserWithRole);
-
-      // Reset the form fields
-      setNewUser({
-        firstName: "",
-        lastName: "",
-        email: "",
-        contactNumber: "",
-        username: "",
-      });
-
-      // Refresh the list of users
-      fetchUsers();
-      console.log("User added successfully:", newUserWithRole);
-    } catch (error) {
-      console.error("Error adding user:", error);
-      setError("Failed to add user. Please try again.");
-    }
-  };
 
   // Function to delete a user
   const deleteUser = async (userId) => {
@@ -119,6 +74,45 @@ const Admin = () => {
     }
   };
 
+  // Function to view performance
+  const viewPerformance = async (userId) => {
+    try {
+      const scoresCollectionRef = collection(db, "users", userId, "scores");
+      const q = query(scoresCollectionRef, where("timestamp", "!=", null));
+      const querySnapshot = await getDocs(q);
+      const fetchedReports = [];
+      querySnapshot.forEach((doc) => {
+        fetchedReports.push({ id: doc.id, ...doc.data() });
+      });
+      setPerformanceData(fetchedReports);
+      // Extract unique timestamps for dropdown
+      const timestamps = Array.from(
+        new Set(fetchedReports.map((report) => report.timestamp.toDate().toLocaleString()))
+      );
+      setUniqueTimestamps(timestamps);
+      setSelectedUser(userId);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("Error fetching performance data:", error);
+      setError("Failed to load performance data. Please try again.");
+    }
+  };
+
+  // Function to handle timestamp selection
+  const handleTimestampChange = async (timestamp) => {
+    setSelectedTimestamp(timestamp);
+    const selectedReport = performanceData.find(
+      (data) => data.timestamp.toDate().toLocaleString() === timestamp
+    );
+    if (selectedReport) {
+      setDetailedReport(selectedReport.performanceData);
+      setGrade(`${selectedReport.score}/${selectedReport.total}`);
+    } else {
+      setDetailedReport(null);
+      setGrade(null);
+    }
+  };
+
   // Function to update a user
   const updateUser = async (e) => {
     e.preventDefault();
@@ -130,8 +124,8 @@ const Admin = () => {
         email: newUser.email,
         contactNumber: newUser.contactNumber,
         username: newUser.username,
+        role: newUser.role, // Update role
       });
-
       // Reset the form fields
       setNewUser({
         firstName: "",
@@ -139,6 +133,7 @@ const Admin = () => {
         email: "",
         contactNumber: "",
         username: "",
+        role: "user", // Reset role to default
       });
       setEditingUserId(null);
       setIsEditModalOpen(false);
@@ -153,117 +148,199 @@ const Admin = () => {
     <div className="admin-container">
       {error && <p style={{ color: "red" }}>{error}</p>}
       <h1 className="admin-title">Admin Panel</h1>
-      {/* Toggle Switch with Labels */}
-      <div className="toggle-switch-container">
-        <span className={`toggle-label ${isAddingUser ? "active" : ""}`}>
-          Add User
-        </span>
-        <label className="toggle-switch" aria-label="Toggle between Add and Edit">
-          <input
-            type="checkbox"
-            checked={isAddingUser}
-            onChange={() => setIsAddingUser(!isAddingUser)}
-          />
-          <span className="slider round"></span>
-        </label>
-        <span className={`toggle-label ${!isAddingUser ? "active" : ""}`}>
-          Modify User
-        </span>
-      </div>
-      {/* Conditional Rendering */}
-      {isAddingUser ? (
-        // Add User Form
-        <form onSubmit={addUser} className="admin-form">
-          <input
-            type="text"
-            placeholder="First Name"
-            value={newUser.firstName}
-            onChange={(e) =>
-              setNewUser({ ...newUser, firstName: e.target.value })
-            }
-            className="admin-input"
-          />
-          <input
-            type="text"
-            placeholder="Last Name"
-            value={newUser.lastName}
-            onChange={(e) =>
-              setNewUser({ ...newUser, lastName: e.target.value })
-            }
-            className="admin-input"
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            value={newUser.email}
-            onChange={(e) =>
-              setNewUser({ ...newUser, email: e.target.value })
-            }
-            className="admin-input"
-          />
-          <input
-            type="text"
-            placeholder="Contact Number"
-            value={newUser.contactNumber}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (!value || /^[0-9]*$/.test(value)) {
-                setNewUser({ ...newUser, contactNumber: value });
-              }
-            }}
-            className="admin-input"
-          />
-          <input
-            type="text"
-            placeholder="Username"
-            value={newUser.username}
-            onChange={(e) =>
-              setNewUser({ ...newUser, username: e.target.value })
-            }
-            className="admin-input"
-          />
-          <button type="submit" className="admin-button">
-            Add User
-          </button>
-        </form>
-      ) : (
-        // Edit User List
-        <>
-          <h2 className="user-records-title">User Records</h2>
-          <ul className="user-list">
-            {users.map((user) => (
-              <li key={user.id} className="user-item">
-                <span className="user-info">
-                  {user.firstName} {user.lastName} - {user.email}
-                </span>
-                <div className="user-actions">
-                  <button
-                    onClick={() => {
-                      setEditingUserId(user.id);
-                      setNewUser({
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        email: user.email,
-                        contactNumber: user.contactNumber,
-                        username: user.username,
-                      });
-                      setIsEditModalOpen(true);
-                    }}
-                    className="edit-button"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => deleteUser(user.id)}
-                    className="delete-button"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </>
+      {/* Modify User List */}
+      <>
+        <h2 className="user-records-title">User Records</h2>
+        <ul className="user-list">
+          {users.map((user) => (
+            <li key={user.id} className="user-item">
+              <span className="user-info">
+                [{user.role}] {user.firstName} {user.lastName} - {user.email}
+              </span>
+              <div className="user-actions">
+                <button
+                  onClick={() => {
+                    setEditingUserId(user.id);
+                    setNewUser({
+                      firstName: user.firstName,
+                      lastName: user.lastName,
+                      email: user.email,
+                      contactNumber: user.contactNumber,
+                      username: user.username,
+                      role: user.role || "user", // Set role from user data or default to "user"
+                    });
+                    setIsEditModalOpen(true);
+                  }}
+                  className="edit-button"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => deleteUser(user.id)}
+                  className="delete-button"
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => viewPerformance(user.id)}
+                  className="view-performance-button"
+                >
+                  View Performance
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </>
+      {/* Modal for Performance Data */}
+      {isModalOpen && (
+        <div className="dr-modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div
+            className="dr-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="dr-modal-header">
+              <h2 className="dr-modal-title">Performance Data</h2>
+              <select
+                id="timestamp-dropdown"
+                value={selectedTimestamp}
+                onChange={(e) => handleTimestampChange(e.target.value)}
+              >
+                <option value="">Select a timestamp</option>
+                {uniqueTimestamps.map((timestamp) => (
+                  <option key={timestamp} value={timestamp}>
+                    {timestamp}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {grade && <p className="grade-display">Grade: {grade}</p>}
+            {detailedReport && (
+              <table className="dr-reports-table">
+                <thead>
+                  <tr>
+                    <th>Model Name</th>
+                    <th>Target Position</th>
+                    <th>Target Rotation</th>
+                    <th>Your Position</th>
+                    <th>Your Rotation</th>
+                    <th>Result</th>
+                    <th>Time Taken</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {detailedReport.map((data, index) => (
+                    <tr key={`${index}`}>
+                      <td>{data.modelName}</td>
+                      <td>
+                        ({data.targetPosition.x.toFixed(2)},{" "}
+                        {data.targetPosition.y.toFixed(2)},{" "}
+                        {data.targetPosition.z.toFixed(2)})
+                      </td>
+                      <td>
+                        ({data.targetRotation.x.toFixed(2)}°,{" "}
+                        {data.targetRotation.y.toFixed(2)}°,{" "}
+                        {data.targetRotation.z.toFixed(2)}°)
+                      </td>
+                      <td>
+                        ({data.userPosition.x.toFixed(2)},{" "}
+                        {data.userPosition.y.toFixed(2)},{" "}
+                        {data.userPosition.z.toFixed(2)})
+                      </td>
+                      <td>
+                        ({data.userRotation.x.toFixed(2)}°,{" "}
+                        {data.userRotation.y.toFixed(2)}°,{" "}
+                        {data.userRotation.z.toFixed(2)}°)
+                      </td>
+                      <td className={data.result === "Pass" ? "dr-pass" : "dr-fail"}>
+                        {data.result}
+                      </td>
+                      <td>{data.timeToComplete} sec</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            <button className="dr-close-modal" onClick={() => setIsModalOpen(false)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {/* Edit Modal */}
+      {isEditModalOpen && (
+        <div className="dr-modal-overlay" onClick={() => setIsEditModalOpen(false)}>
+          <div
+            className="dr-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="dr-modal-title">Edit User</h2>
+            <form onSubmit={updateUser} className="admin-form">
+              <input
+                type="text"
+                placeholder="First Name"
+                value={newUser.firstName}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, firstName: e.target.value })
+                }
+                className="admin-input"
+              />
+              <input
+                type="text"
+                placeholder="Last Name"
+                value={newUser.lastName}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, lastName: e.target.value })
+                }
+                className="admin-input"
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={newUser.email}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, email: e.target.value })
+                }
+                className="admin-input"
+              />
+              <input
+                type="text"
+                placeholder="Contact Number"
+                value={newUser.contactNumber}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (!value || /^[0-9]*$/.test(value)) {
+                    setNewUser({ ...newUser, contactNumber: value });
+                  }
+                }}
+                className="admin-input"
+              />
+              <input
+                type="text"
+                placeholder="Username"
+                value={newUser.username}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, username: e.target.value })
+                }
+                className="admin-input"
+              />
+              {/* Role Dropdown */}
+              <select
+                value={newUser.role}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, role: e.target.value })
+                }
+                className="admin-input"
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+              <button type="submit" className="admin-button">
+                Save Changes
+              </button>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );
