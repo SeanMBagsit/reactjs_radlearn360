@@ -7,6 +7,7 @@ import { doc, setDoc } from "firebase/firestore"; // Import Firestore functions
 import { db, auth } from "./firebaseConfig"; // Import centralized db and auth
 import './simulation.css';
 
+
 const Simulation = () => {
     const [showModel, setShowModel] = useState(false);
     const [showIntro, setShowIntro] = useState(true);
@@ -34,9 +35,9 @@ const Simulation = () => {
     const [modelPerformanceData, setModelPerformanceData] = useState([]);
     const [userEmail, setUserEmail] = useState("");
     const [showSlideOutPanel, setShowSlideOutPanel] = useState(false); // State to control slide-out panel visibility
-
-    
-
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const modalRef = useRef(null);
+    const closeModalRef = useRef(null); // Renamed from closeModal
 
     const boundaries = {
         minX: -10,
@@ -57,6 +58,7 @@ const Simulation = () => {
             instructionText: "The objective of this simulation is to properly simulate the PA Hand position.",
             positionText:"x: 0.61, y: -8.88, z: -7.22",
             rotationText:"x: 0, y: 0, z: 0",
+            youtubeFile: "https://www.youtube.com/embed/BwCDglPIoYA"
         },
         {
             ModelFile: '/models/wrist.glb',
@@ -71,6 +73,7 @@ const Simulation = () => {
             instructionText: "The objective of this simulation is to properly simulate the Lateral Wrist position.",
             positionText:"x: 1.39, y: 0.08, z: -0.42 ",
             rotationText:"x: 0, y: 0, z:-90",
+             youtubeFile: "https://www.youtube.com/embed/0HNpAGp8bcM"
         },
         {
             ModelFile: '/models/elbow.glb',
@@ -85,6 +88,7 @@ const Simulation = () => {
             instructionText: "The objective of this simulation is to properly simulate the AP Elbow position.",
             positionText:"x: -3.63, y: -3.33, z: 4.66 ",
             rotationText:"x: 0, y: 0, z: -180 or 180",
+             youtubeFile: "https://www.youtube.com/embed/YH5gA4_B3Io"
         },
         {
             ModelFile: '/models/foot.glb',
@@ -99,6 +103,7 @@ const Simulation = () => {
             instructionText: "The objective of this simulation is to properly simulate the AP Foot position.",
             positionText:"x: 0.22, y: -7.90, z: 1.26 ",
             rotationText:"x: 0, y: 0, z: 0",
+            youtubeFile: "https://www.youtube.com/embed/rnTZ6CK03Iw"
         },
         {  
             ModelFile: '/models/foot.glb',
@@ -113,11 +118,53 @@ const Simulation = () => {
             instructionText: "The objective of this simulation is to properly simulate the Lateral Ankle position.",
             positionText:"x: -8.67, y: 0.24, z: 1.59 ",
             rotationText:"x: -180, y: 90, z: -90",
+            youtubeFile: "https://www.youtube.com/embed/3gTqd-tw3yA"
         }
     ];
 
     const toggleGuide = () => {
         setShowGuide((prev) => !prev);
+    };
+    
+
+    const openModal = () => {
+        setIsModalVisible(true);
+    };
+    const closeModal = () => {
+        setIsModalVisible(false);
+    };
+
+    const makeModalDraggable = () => {
+        const modal = modalRef.current;
+        let isDragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
+    
+        const startDrag = (e) => {
+            isDragging = true;
+            offsetX = e.clientX - modal.getBoundingClientRect().left;
+            offsetY = e.clientY - modal.getBoundingClientRect().top;
+        };
+    
+        const drag = (e) => {
+            if (!isDragging) return;
+            modal.style.left = `${e.clientX - offsetX}px`;
+            modal.style.top = `${e.clientY - offsetY}px`;
+        };
+    
+        const stopDrag = () => {
+            isDragging = false;
+        };
+    
+        modal.addEventListener('mousedown', startDrag);
+        window.addEventListener('mousemove', drag);
+        window.addEventListener('mouseup', stopDrag);
+    
+        return () => {
+            modal.removeEventListener('mousedown', startDrag);
+            window.removeEventListener('mousemove', drag);
+            window.removeEventListener('mouseup', stopDrag);
+        };
     };
 
         // Toggle function for the slide-out panel
@@ -215,6 +262,11 @@ const Simulation = () => {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     };
+    useEffect(() => {
+        if (isModalVisible && modalRef.current) {
+            makeModalDraggable();
+        }
+    }, [isModalVisible]);
     
 
     useEffect(() => {
@@ -755,6 +807,41 @@ const Simulation = () => {
                     </div>
                 </div>
             )}
+{isModalVisible && (
+                <div className="popup-guide-overlay">
+                    <div 
+                        className="popup-guide" 
+                        ref={modalRef}
+                        style={{
+                            position: 'absolute',
+                            top: '50px',
+                            left: '52x',
+                            zIndex: 1000,
+                            width: 530,
+                        }}
+                    >
+                        <button className="close-guide-button" onClick={closeModal}>
+                            &times;
+                        </button>
+                        <div className="guide-content">
+                            {simulationSettings[currentItem]?.youtubeFile ? (
+                                <iframe
+                                    width="480"
+                                    height="315"
+                                    src={simulationSettings[currentItem]?.youtubeFile}
+                                    title="YouTube video player"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                >
+                                </iframe>
+                            ) : (
+                                <p>No video available for this simulation.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Intro Screen */}
             {showIntro && (
@@ -837,17 +924,44 @@ const Simulation = () => {
         lineHeight: '1.6', // Improved readability
     }}
 >
+{/* Title */}
+<div style={{
+    display: 'flex',
+    alignItems: 'center', // Align items vertically in the center
+    justifyContent: 'space-between', // Push content to opposite ends
+    marginBottom: '15px', // Add spacing below the container
+}}>
     {/* Title */}
-    <h3 style={{ 
-        margin: '0 0 15px 0', 
-        fontSize: '18px', 
-        fontWeight: 'bold', 
-        borderBottom: '1px solid rgba(255, 255, 255, 0.2)', 
+    <h3 style={{
+        margin: 0,
+        fontSize: '18px',
+        fontWeight: 'bold',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
         paddingBottom: '10px',
-        color: '#FFD700' // Gold for title
+        color: '#FFD700', // Gold for title
     }}>
-        How to Simulate in 3D Environment?
+        How to Simulate in 3D Environment? 
     </h3>
+
+    {/* YouTube Icon */}
+    <div style={{
+        display: 'flex',
+        marginTop: '1px',
+        marginRight: '50px', // Add spacing between text and icon
+    }}>
+            <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="36"
+                height="36"
+                fill="#FF0000"
+                viewBox="0 0 24 24" 
+                style={{ cursor: 'pointer' }}
+                onClick={openModal} // Open modal on click
+            >
+                <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+            </svg>
+    </div>
+</div>
 
     {/* Dynamic Instruction Text */}
     <p style={{ 
