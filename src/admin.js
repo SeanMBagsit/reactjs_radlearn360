@@ -77,6 +77,13 @@ const Admin = () => {
   // Function to view performance
   const viewPerformance = async (userId) => {
     try {
+      // Reset all performance-related states before fetching new data
+      setPerformanceData([]);
+      setSelectedTimestamp("");
+      setUniqueTimestamps([]);
+      setDetailedReport(null);
+      setGrade(null);
+
       const scoresCollectionRef = collection(db, "users", userId, "scores");
       const q = query(scoresCollectionRef, where("timestamp", "!=", null));
       const querySnapshot = await getDocs(q);
@@ -84,12 +91,20 @@ const Admin = () => {
       querySnapshot.forEach((doc) => {
         fetchedReports.push({ id: doc.id, ...doc.data() });
       });
+
+      // Sort reports by timestamp (optional)
+      fetchedReports.sort((a, b) =>
+        a.timestamp.toDate() > b.timestamp.toDate() ? -1 : 1
+      );
+
       setPerformanceData(fetchedReports);
+
       // Extract unique timestamps for dropdown
       const timestamps = Array.from(
         new Set(fetchedReports.map((report) => report.timestamp.toDate().toLocaleString()))
       );
       setUniqueTimestamps(timestamps);
+
       setSelectedUser(userId);
       setIsModalOpen(true);
     } catch (error) {
@@ -196,105 +211,114 @@ const Admin = () => {
           ))}
         </ul>
       </>
-    {/* Modal for Performance Data */}
-{isModalOpen && (
-  <div className="dr-modal-overlay" onClick={() => setIsModalOpen(false)}>
-    <div
-      className="dr-modal-content"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="dr-modal-header">
-        <h2 className="dr-modal-title">Performance Data</h2>
-        {/* Display Score beside the title */}
-        {grade && (
-          <span className="dr-modal-score">
-            Score: {grade}
-          </span>
-        )}
-        <select
-          id="timestamp-dropdown"
-          value={selectedTimestamp}
-          onChange={(e) => handleTimestampChange(e.target.value)}
-        >
-          <option value="">Select a timestamp</option>
-          {uniqueTimestamps.map((timestamp) => (
-            <option key={timestamp} value={timestamp}>
-              {timestamp}
-            </option>
-          ))}
-        </select>
-      </div>
-      {detailedReport && (
-        <>
-          <table className="dr-reports-table">
-            <thead>
-              <tr>
-                <th>Model Name</th>
-                <th>Target Position</th>
-                <th>Target Rotation</th>
-                <th>Your Position</th>
-                <th>Your Rotation</th>
-                <th>Result</th>
-                <th>Time Taken</th>
-              </tr>
-            </thead>
-            <tbody>
-              {detailedReport.map((data, index) => (
-                <tr key={`${index}`}>
-                  <td>{data.modelName}</td>
-                  <td>
-                    ({data.targetPosition.x.toFixed(2)},{" "}
-                    {data.targetPosition.y.toFixed(2)},{" "}
-                    {data.targetPosition.z.toFixed(2)})
-                  </td>
-                  <td>
-                    ({data.targetRotation.x.toFixed(2)}°,{" "}
-                    {data.targetRotation.y.toFixed(2)}°,{" "}
-                    {data.targetRotation.z.toFixed(2)}°)
-                  </td>
-                  <td>
-                    ({data.userPosition.x.toFixed(2)},{" "}
-                    {data.userPosition.y.toFixed(2)},{" "}
-                    {data.userPosition.z.toFixed(2)})
-                  </td>
-                  <td>
-                    ({data.userRotation.x.toFixed(2)}°,{" "}
-                    {data.userRotation.y.toFixed(2)}°,{" "}
-                    {data.userRotation.z.toFixed(2)}°)
-                  </td>
-                  <td className={data.result === "Pass" ? "dr-pass" : "dr-fail"}>
-                    {data.result}
-                  </td>
-                  <td>{data.timeToComplete} sec</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-             {/* Display Email Below Title */}
-        {selectedUser && (
-          <p className="dr-modal-email">
-           Email:{" "}
-            {users.find((user) => user.id === selectedUser)?.email || "N/A"}
-          </p>
-        )}
-          {/* Print Report Button Container */}
-          <div className="dr-print-button-container">
-            <button
-              className="dr-print-button"
-              onClick={handlePrintReport}
-              aria-label="Print report"
-            >
-              Print Report
+      {/* Modal for Performance Data */}
+      {isModalOpen && (
+        <div className="dr-modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div
+            className="dr-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="dr-modal-header">
+              <h2 className="dr-modal-title">Performance Data</h2>
+              {/* Display Score beside the title */}
+              {grade && (
+                <span className="dr-modal-score">
+                  Score: {grade}
+                </span>
+              )}
+              <select
+                id="timestamp-dropdown"
+                value={selectedTimestamp}
+                onChange={(e) => handleTimestampChange(e.target.value)}
+              >
+                <option value="">Select a timestamp</option>
+                {uniqueTimestamps.map((timestamp) => (
+                  <option key={timestamp} value={timestamp}>
+                    {timestamp}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {detailedReport && (
+              <>
+                <table className="dr-reports-table">
+                  <thead>
+                    <tr>
+                      <th>Model Name</th>
+                      <th>Target Position</th>
+                      <th>Target Rotation</th>
+                      <th>Your Position</th>
+                      <th>Your Rotation</th>
+                      <th>Result</th>
+                      <th>Time Taken</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {detailedReport.map((data, index) => (
+                      <tr key={`${index}`}>
+                        <td>{data.modelName}</td>
+                        <td>
+                          ({data.targetPosition.x.toFixed(2)},{" "}
+                          {data.targetPosition.y.toFixed(2)},{" "}
+                          {data.targetPosition.z.toFixed(2)})
+                        </td>
+                        <td>
+                          ({data.targetRotation.x.toFixed(2)}°,{" "}
+                          {data.targetRotation.y.toFixed(2)}°,{" "}
+                          {data.targetRotation.z.toFixed(2)}°)
+                        </td>
+                        <td>
+                          ({data.userPosition.x.toFixed(2)},{" "}
+                          {data.userPosition.y.toFixed(2)},{" "}
+                          {data.userPosition.z.toFixed(2)})
+                        </td>
+                        <td>
+                          ({data.userRotation.x.toFixed(2)}°,{" "}
+                          {data.userRotation.y.toFixed(2)}°,{" "}
+                          {data.userRotation.z.toFixed(2)}°)
+                        </td>
+                        <td className={data.result === "Pass" ? "dr-pass" : "dr-fail"}>
+                          {data.result}
+                        </td>
+                        <td>{data.timeToComplete} sec</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {/* Display Email Below Title */}
+                {selectedUser && (
+                  <p className="dr-modal-email">
+                    Email:{" "}
+                    {users.find((user) => user.id === selectedUser)?.email || "N/A"}
+                  </p>
+                )}
+                {/* Display First Name and Last Name Below Email */}
+                {selectedUser && (
+                  <p className="dr-modal-name">
+                    Name:{" "}
+                    {`${users.find((user) => user.id === selectedUser)?.firstName || "N/A"} ${
+                      users.find((user) => user.id === selectedUser)?.lastName || "N/A"
+                    }`}
+                  </p>
+                )}
+                {/* Print Report Button Container */}
+                <div className="dr-print-button-container">
+                  <button
+                    className="dr-print-button"
+                    onClick={handlePrintReport}
+                    aria-label="Print report"
+                  >
+                    Print Report
+                  </button>
+                </div>
+              </>
+            )}
+            <button className="dr-close-modal" onClick={() => setIsModalOpen(false)}>
+              Close
             </button>
           </div>
-        </>
+        </div>
       )}
-      <button className="dr-close-modal" onClick={() => setIsModalOpen(false)}>
-        Close
-      </button>
-    </div>
-  </div>
-)}
       {/* Edit Modal */}
       {isEditModalOpen && (
         <div className="dr-modal-overlay" onClick={() => setIsEditModalOpen(false)}>

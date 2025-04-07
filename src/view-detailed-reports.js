@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "./firebaseConfig"; // Import centralized db and auth
-import { collection, getDocs, query, where } from "firebase/firestore"; // Firestore functions
-import './view-detailed-reports.css';
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  doc,
+  getDoc,
+} from "firebase/firestore"; // Firestore functions
+import "./view-detailed-reports.css";
 
 const DetailedReports = () => {
   const [reports, setReports] = useState([]); // State to store detailed reports
   const [loading, setLoading] = useState(true); // Loading state
   const [userEmail, setUserEmail] = useState(""); // Logged-in user's email
+  const [userDetails, setUserDetails] = useState({ firstName: "", lastName: "" }); // User's first and last name
   const [selectedReport, setSelectedReport] = useState(null); // Selected report for detailed view
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
 
   useEffect(() => {
-    const fetchReports = async () => {
+    const fetchUserDataAndReports = async () => {
       try {
         if (!auth.currentUser) {
           console.error("No user is currently signed in.");
@@ -21,6 +29,21 @@ const DetailedReports = () => {
 
         const user = auth.currentUser;
         setUserEmail(user.email || "Unknown");
+
+        // Fetch user details (first name and last name) from Firestore
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          setUserDetails({
+            firstName: userData.firstName || "N/A",
+            lastName: userData.lastName || "N/A",
+          });
+        } else {
+          console.warn("User document does not exist in Firestore.");
+          setUserDetails({ firstName: "N/A", lastName: "N/A" });
+        }
 
         // Reference to the user's scores subcollection
         const scoresCollectionRef = collection(db, "users", user.uid, "scores");
@@ -36,12 +59,12 @@ const DetailedReports = () => {
         setReports(fetchedReports);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching detailed reports:", error);
+        console.error("Error fetching user data or detailed reports:", error);
         setLoading(false);
       }
     };
 
-    fetchReports();
+    fetchUserDataAndReports();
   }, []);
 
   // Handle click on a report date to show detailed performance data
@@ -74,6 +97,9 @@ const DetailedReports = () => {
     <div className="dr-reports-container">
       <h1 className="dr-title">My Detailed Reports</h1>
       <p className="dr-user-email">User Email: {userEmail}</p>
+      <p className="dr-user-name">
+        Name: {userDetails.firstName} {userDetails.lastName}
+      </p>
 
       {/* List of reports */}
       <div className="dr-report-list">
@@ -108,10 +134,16 @@ const DetailedReports = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="dr-modal-header">
-              <h2 className="dr-modal-title">
-                Performance Data for Simulation on{" "}
-                {new Date(selectedReport.timestamp.toDate()).toLocaleString()}
-              </h2>
+              <div className="dr-modal-title-container">
+                <h2 className="dr-modal-title">
+                  Performance Data for Simulation on{" "}
+                  {new Date(selectedReport.timestamp.toDate()).toLocaleString()}
+                </h2>
+                {/* Display User's Full Name Below Title */}
+                <p className="dr-modal-name">
+                  Name: {userDetails.firstName} {userDetails.lastName}
+                </p>
+              </div>
               <button
                 className="dr-print-button"
                 onClick={handlePrintReport}

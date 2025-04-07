@@ -307,3 +307,8 @@
   #timestamp-dropdown option {
     color: black; /* Ensure dropdown options text color is black */
   }
+ .dr-modal-name {
+  color: black;
+  text-align: left; /* Align text to the left */
+  margin-top: 0.5rem; /* Maintain spacing if needed */
+}

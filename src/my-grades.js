@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "./firebaseConfig"; // Import centralized db and auth
-import { collection, getDocs, query, where } from "firebase/firestore"; // Firestore functions
+import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore"; // Firestore functions
 import "./my-grades.css"; // Import CSS for styling
 
 const MyGrades = () => {
   const [reports, setReports] = useState([]); // State to store detailed reports
   const [loading, setLoading] = useState(true); // Loading state
   const [userEmail, setUserEmail] = useState(""); // Logged-in user's email
+  const [userDetails, setUserDetails] = useState({ firstName: "", lastName: "" }); // User's first and last name
 
   useEffect(() => {
-    const fetchReports = async () => {
+    const fetchUserDataAndReports = async () => {
       try {
         if (!auth.currentUser) {
           console.error("No user is currently signed in.");
@@ -19,6 +20,21 @@ const MyGrades = () => {
 
         const user = auth.currentUser;
         setUserEmail(user.email || "Unknown");
+
+        // Fetch user details (first name and last name) from Firestore
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          setUserDetails({
+            firstName: userData.firstName || "N/A",
+            lastName: userData.lastName || "N/A",
+          });
+        } else {
+          console.warn("User document does not exist in Firestore.");
+          setUserDetails({ firstName: "N/A", lastName: "N/A" });
+        }
 
         // Reference to the user's scores subcollection
         const scoresCollectionRef = collection(db, "users", user.uid, "scores");
@@ -39,12 +55,12 @@ const MyGrades = () => {
         setReports(fetchedReports);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching reports:", error);
+        console.error("Error fetching user data or reports:", error);
         setLoading(false);
       }
     };
 
-    fetchReports();
+    fetchUserDataAndReports();
   }, []);
 
   if (loading) {
@@ -59,6 +75,9 @@ const MyGrades = () => {
     <div className="mg-grades-container">
       <h1 className="mg-title">My Grades</h1>
       <p className="mg-user-email">User Email: {userEmail}</p>
+      <p className="mg-user-name">
+        Name: {userDetails.firstName} {userDetails.lastName}
+      </p>
 
       {/* Table to display simulation data */}
       <div className="mg-grade-card">
