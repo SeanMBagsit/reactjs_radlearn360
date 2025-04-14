@@ -127,80 +127,82 @@ const DetailedReports = () => {
       </div>
 
       {/* Modal for Detailed Performance Data */}
-      {isModalOpen && selectedReport && (
-        <div className="dr-modal-overlay" onClick={closeModal}>
-          <div
-            className="dr-modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="dr-modal-header">
-              <div className="dr-modal-title-container">
-                <h2 className="dr-modal-title">
-                  Performance Data for Simulation on{" "}
-                  {new Date(selectedReport.timestamp.toDate()).toLocaleString()}
-                </h2>
-                {/* Display User's Full Name Below Title */}
-                <p className="dr-modal-name">
-                  Name: {userDetails.firstName} {userDetails.lastName}
-                </p>
-              </div>
-              <button
-                className="dr-print-button"
-                onClick={handlePrintReport}
-                aria-label="Print report"
-              >
-                Print Report
-              </button>
-            </div>
-            <table className="dr-reports-table">
-              <thead>
-                <tr>
-                  <th>Model Name</th>
-                  <th>Target Position</th>
-                  <th>Target Rotation</th>
-                  <th>Your Position</th>
-                  <th>Your Rotation</th>
-                  <th>Result</th>
-                  <th>Time Taken</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selectedReport.performanceData.map((data, index) => (
-                  <tr key={`${selectedReport.id}-${index}`}>
-                    <td>{data.modelName}</td>
-                    <td>
-                      ({data.targetPosition.x.toFixed(2)},{" "}
-                      {data.targetPosition.y.toFixed(2)},{" "}
-                      {data.targetPosition.z.toFixed(2)})
-                    </td>
-                    <td>
-                      ({data.targetRotation.x.toFixed(2)}°,{" "}
-                      {data.targetRotation.y.toFixed(2)}°,{" "}
-                      {data.targetRotation.z.toFixed(2)}°)
-                    </td>
-                    <td>
-                      ({data.userPosition.x.toFixed(2)},{" "}
-                      {data.userPosition.y.toFixed(2)},{" "}
-                      {data.userPosition.z.toFixed(2)})
-                    </td>
-                    <td>
-                      ({data.userRotation.x.toFixed(2)}°,{" "}
-                      {data.userRotation.y.toFixed(2)}°,{" "}
-                      {data.userRotation.z.toFixed(2)}°)
-                    </td>
-                    <td className={data.result === "Pass" ? "dr-pass" : "dr-fail"}>
-                      {data.result}
-                    </td>
-                    <td>{data.timeToComplete} sec</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <button className="dr-close-modal" onClick={closeModal}>
-              Close
-            </button>
-          </div>
+{isModalOpen && selectedReport && (
+  <div className="dr-modal-overlay" onClick={closeModal}>
+    <div
+      className="dr-modal-content"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="dr-modal-header">
+        <div className="dr-modal-title-container">
+          <h2 className="dr-modal-title">
+            Performance Data for Simulation on{" "}
+            {new Date(selectedReport.timestamp.toDate()).toLocaleString()}
+          </h2>
+          {/* Display User's Email Address Below Title */}
+          <p className="dr-modal-email">Email: {userEmail}</p>
+          {/* Display User's Full Name Below Email */}
+          <p className="dr-modal-name">
+            Name: {userDetails.firstName} {userDetails.lastName}
+          </p>
         </div>
+        <button
+          className="dr-print-button"
+          onClick={handlePrintReport}
+          aria-label="Print report"
+        >
+          Print Report
+        </button>
+      </div>
+      <table className="dr-reports-table">
+        <thead>
+          <tr>
+            <th>Model Name</th>
+            <th>Target Position</th>
+            <th>Target Rotation</th>
+            <th>Your Position</th>
+            <th>Your Rotation</th>
+            <th>Result</th>
+            <th>Time Taken</th>
+          </tr>
+        </thead>
+        <tbody>
+          {selectedReport.performanceData.map((data, index) => (
+            <tr key={`${selectedReport.id}-${index}`}>
+              <td>{data.modelName}</td>
+              <td>
+                ({data.targetPosition.x.toFixed(2)},{" "}
+                {data.targetPosition.y.toFixed(2)},{" "}
+                {data.targetPosition.z.toFixed(2)})
+              </td>
+              <td>
+                ({data.targetRotation.x.toFixed(2)}°,{" "}
+                {data.targetRotation.y.toFixed(2)}°,{" "}
+                {data.targetRotation.z.toFixed(2)}°)
+              </td>
+              <td>
+                ({data.userPosition.x.toFixed(2)},{" "}
+                {data.userPosition.y.toFixed(2)},{" "}
+                {data.userPosition.z.toFixed(2)})
+              </td>
+              <td>
+                ({data.userRotation.x.toFixed(2)}°,{" "}
+                {data.userRotation.y.toFixed(2)}°,{" "}
+                {data.userRotation.z.toFixed(2)}°)
+              </td>
+              <td className={data.result === "Pass" ? "dr-pass" : "dr-fail"}>
+                {data.result}
+              </td>
+              <td>{data.timeToComplete} sec</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button className="dr-close-modal" onClick={closeModal}>
+        Close
+      </button>
+    </div>
+  </div>
       )}
     </div>
   );
